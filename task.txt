@@ -1,0 +1,35 @@
+1. 필요한 기능 정리
+  [1] SCSS - 컴파일 & compressed | expanded(+format)
+  [2] JS - 파일 합치기 & compressed
+  [3] HTML - Format & EJS & 카테고리별 리스트업
+  [4] Deploy - CI/CD, git-repo-info?
+      1> 날짜 자동업데이트 기능
+      2> Clean >> Build >> Deploy
+      3> Commit Message 반영
+  [5] Image
+      1> imagemin 최신버전 모듈 사용
+      2> svg(sassInlineSvg) 최신버전 모듈 사용 
+      3> sprite 자동화
+      4> 조건보다 작은 용량의 이미지파일을 data 타입으로 변환
+  [6] 개발모드 - watch, browsersync, dist 파일 없이 실행..
+  [7] Build - 모든 파일 삭제 후 생성(clean)
+
+2. 가능한 대체모듈 찾기
+  [1] 모듈들 호환성 확인
+  [2] 대체 가능/불가 나누기
+
+3. 2개 프로젝트 생성
+  [1] webpack
+  [2] gulp+webpack
+
+4. 2개 프로젝트 구축
+  [1] webpack
+  [2] gulp+webpack
+
+TodoList
+[1] 레포
+[2] 프로젝트 2개 생성
+[3] 각 단계에 해당하는 레퍼런스 찾기
+[4] 레퍼런스를 코드로 작업해보기
+[5] 가장 간단한 것부터 테스트 -> 이미지 하나, html 파일 하나 등등
+
