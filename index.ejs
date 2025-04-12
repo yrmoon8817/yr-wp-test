@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title><%= project.projectName %> : 마크업 산출물</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+*{margin:0;padding:0;font-family: "Noto Sans KR", sans-serif;}
+html{width:100%;}
+body{width:100%;min-height:100%;background-color:#f1f1f1;padding-bottom:80px;}
+ul,ol{list-style:none}
+a {text-decoration:none;color:inherit;}
+.index-header{position:fixed;top:0;left:0;display:flex;justify-content:space-between;align-items:center;width:100%;min-height:80px;padding:0 20px;background:#333;z-index:2;box-sizing: border-box;}
+.index-header .index-title{padding:8px;font-size:25px;font-weight:700;color:#f1f1f1;box-sizing: border-box;}
+input,button, select{outline:none;border:0;}
+.index-header .index-search {max-width:400px;width:100%;display:flex;flex-wrap:wrap;justify-content:center;font-size:12px;}
+.index-search label{vertical-align:middle;margin-right:10px;font-weight:300;color:#fcc4b3}
+.index-search input,.index-search select{font-size:12px;vertical-align:middle;padding:3px 5px;color:#333}
+.index-search .index-search-date{display: flex;margin-left:0;}
+.index-search > li {display: flex;padding:5px 10px;border-bottom:1px solid #ddd;}
+.index-search .index-search-keyword input{width:170px}
+.index-section-category {padding:100px 20px 20px;background:#f1f1f1}
+.index-category-list {overflow-y:auto; max-height:100px;}
+.index-section-category a{color:#555;font-size:12px;}
+.sub-title{padding:10px;font-size:17px;font-weight:700;border-bottom:1px solid #999;scroll-margin-top:50px; color:#222;scroll-margin-top:100px;}
+.index-section-category .index-title,
+.section-list .index-title {color:#18407e;background-color:#cfd8e4;}
+.index-section-category .sub-title.cate {font-size:14px; border-bottom:1px solid #333;padding:5px 10px;box-sizing: border-box;}
+section .index-cate-item{padding:4px 10px;border-bottom:1px solid #ddd;box-sizing: border-box;}
+section .index-title{padding:8px;font-size:22px;font-weight:700;color:#2d2d2d;border-bottom:2px solid #2d2d2d;}
+section .sub-title:not(:first-of-type){margin-top:10px;}
+.section-list {padding:20px;}
+.sub-title:not(.cate):not(:first-of-type){margin-top:15px;}
+.index-section-item{display:block;padding:7px 10px;border-bottom:1px solid #ddd;}
+.index-link-title {display:inline-block;margin-right:15px;}
+.index-section-item .filename{background-color:#cccccc;padding:1px 5px;border-radius:4px;word-wrap:break-word}
+.section-list .index-link{font-size:13px;color:#777;text-decoration:none;letter-spacing:.6px;padding:1px 5px;border-radius:3px}
+.section-list .index-link:hover{color:#333}
+.index-section-info{padding:15px 20px;font-size:12px;color:#666}
+.index-section-info span{vertical-align:top;margin-top:2px;}
+.new{display:inline-block;position:relative;top:-1px;height:16px;padding:0 5px 1px;border-radius:3px;background:#b93636;font-family:verdana;font-size:11px;font-weight:400;color:#fff;line-height:16px;vertical-align:middle;}
+.update{display:inline-block;position:relative;top:-1px;height:16px;background:#45a7fb;color:#fff;padding:0 5px 1px;border-radius:3px;font-family:verdana;font-size:11px;font-weight:400;line-height:16px;vertical-align:middle;}
+.matching_keywords{background:#2aff9c;color:#16752e}
+.index-footer{position:fixed;bottom:0;left:0;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;padding:10px 20px;background:#333;min-height:40px;max-height:60px;}
+.preview_btn{height:36px;margin:10px;padding:10px;border:none;border-radius:6px;background:#777;font-size:12px;font-weight:bold;color:#fff;cursor:pointer}
+.index-footer .index-info{font-size:12px;color:#fff;letter-spacing:2px}
+#index_view{position:fixed;z-index:100;left:30%;top:100px;bottom:10px;width:var(--size);border:1px solid #000;background:#fff;}#index_view iframe{width:100%;height:100%;overflow:auto}.on a{background:#ffff93}
+@media screen and (max-width:767px){
+ .index-header {flex-direction: column;flex-wrap: wrap;text-align:center;padding:10px;box-sizing: border-box;}
+ .index-section-category{margin-top:130px;}
+ .index-search{max-width:360px !important;}
+ .index-search > li {padding:5px 10px;border-bottom:none;}
+ section {padding-left:10px !important;padding-right:10px !important;}
+ .section-list .index-link{display:inline-block;}
+ .section-list .index-link .filename{display:inline-block;margin-top:10px;}
+ .new, .update {margin-left:5px !important;}
+}
+</style>
+</head>
+<body>
+	<header class="index-header">
+		<h1 class="index-title"><%= project.projectName %> : 마크업 산출물 <button type="button" class="preview_btn">Preview</button></h1>
+		
+		<ul class="index-search">
+			<li class="index-search-menu">
+				<label for="index-search-from-menu">Menu</label>
+				<select name="" id="index-search-from-menu">
+				</select>
+			</li>
+			<li class="index-search-date">
+				<label for="index-search-from-date">Updated date</label>
+				<select name="" id="index-search-from-date">
+				</select>
+			</li>
+			<li class="index-search-keyword">
+				<label for="index-search-by-keyword">Searching by keywords</label><input type="text" id="index-search-by-keyword" placeholder="Keywords">
+			</li>
+		</ul>
+	</header>
+	<section class="index-section-category" id="cate-top">
+		<h2 class="index-title">카테고리 바로가기</h2>
+		<%
+		var list = files || [];
+		var cateArr = [];
+		 for( let f=0; f< list.length; f+=1) {%>
+		<h3 class="sub-title cate"><%=list[f][0].theme%></h3>
+		<ul class="index-category-list">
+		<%
+		var titleArr = [];
+		var count = 0;
+		var check=false;
+		for( let x=1; x< list[f].length; x+=1) {
+			if(titleArr){
+				titleArr.forEach((item,index)=>{
+					if(titleArr[index]==list[f][x].listTitle.split(' : ')[1]){
+						count++;
+					}
+					if(index === titleArr.length-1){
+						if(count>0){
+							check=false
+						} else {
+							check=true
+						}
+						count=0;
+						return check;
+					}
+				})
+			}
+			if(check || titleArr.length===0){ titleArr.push(list[f][x].listTitle.split(' : ')[1]) %>
+				<li class="index-cate-item"><a href="#tab<%=`${f}-${x}`%>"><%=list[f][x].listTitle.split(' : ')[1]%></a></li>
+			<%}%>
+			<%}%>
+		</ul>	
+		<%}%>
+	</section>
+	<section class="index-section-info">
+		<span class="label-date new"></span> NEW <span class="label-date update"></span> UPDATE
+	</section>
+		<%
+		var list = files;
+		var cateArr = [];
+		 for( let g=0; g < list.length; g+=1) {%>
+	<section class="section-list">
+				<h2 id="tab_doc" class="index-title"><%=list[g][0].theme%></h2>
+				<%
+				var titleArr = [];
+				var count = 0;
+				var check=false;
+				for( let w=1; w< list[g].length; w+=1){
+					if(titleArr){
+						titleArr.forEach((item,index)=>{
+							if(titleArr[index]==list[g][w].listTitle.split(' : ')[1]){
+								count++;
+							}
+							if(index === titleArr.length-1){
+								if(count>0){
+									check=false
+								} else {
+									check=true
+								}
+								count=0;
+								return check;
+							}
+						})
+					}
+				if(check || titleArr.length===0){ if(titleArr.length!==0){%></ul><%} titleArr.push(list[g][w].listTitle.split(' : ')[1]) %>	
+				 <h3 id="tab<%=`${g}-${w}`%>" class="sec_h sub-title"><%=list[g][w].listTitle.split(' : ')[1]%></h3><ul class="list-box">
+				<%}%>
+					<li class="index-section-item"><a class="index-link" href="views/<%=list[g][0].theme%>/<%= list[g][w].name %>"><span class="index-link-title"><%=list[g][w].listTitle.split(' : ')[0]%></span><span class="filename">views/<%=list[g][0].theme%>/<%= list[g][w].name %></span></a><% if (list[g][w].splitStatus) { %>
+						<span class="label-date <%= list[g][w].splitStatus %>"><%= list[g][w].splitStatusDate %></span>
+						<%}%></li><%}%>
+						</ul>
+		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
+	</section>
+	<%}%>
+	<footer class="index-footer">
+		<p class="index-info"><strong>Hivelab</strong> / <%= project.projectOrg %> / <%= project.projectAuthor %></p>
+	</footer>
+<script>
+	// Preview 기능
+document.body.addEventListener('keyup', function(event) {
+  if (event.key === 'Escape') {
+    document.querySelectorAll('.section-list ul li').forEach(item => item.classList.remove('on'));
+    document.querySelectorAll('.section-list').forEach(section => {
+      section.removeEventListener('click', handleSectionClick);
+    });
+    document.querySelectorAll('.section-list ul li').forEach(item => {
+      item.replaceWith(item.cloneNode(true));
+    });
+    const iframe = document.querySelector('#index_view iframe');
+    const indexView = document.querySelector('#index_view');
+    const previewBox = document.querySelector('#preview-box');
+    if (iframe) iframe.remove();
+    if (indexView) indexView.remove();
+    if (previewBox) previewBox.remove();
+  }
+});
+
+function handleSectionClick(event) {
+  const target = event.target.closest('a');
+  if (!target) return;
+  event.preventDefault();
+  document.querySelectorAll('.section-list li').forEach(item => item.classList.remove('on'));
+  target.parentElement.classList.add('on');
+  const iframe = document.querySelector('#index_view iframe');
+  if (iframe) iframe.src = target.href;
+}
+
+function changeSrc() {
+  document.querySelectorAll('.section-list').forEach(section => {
+    section.addEventListener('click', handleSectionClick);
+  });
+  document.querySelectorAll('.section-list ul li a').forEach(link => {
+    link.addEventListener('dblclick', function() {
+      window.open(this.href);
+    });
+  });
+  document.addEventListener('keydown', function(event) {
+    switch (event.key) {
+      case 'Enter':
+        const activeLink = document.querySelector('.on a');
+        if (activeLink) window.open(activeLink.href);
+        break;
+      case 'ArrowLeft':
+      case 'ArrowRight':
+        break;
+      case 'ArrowUp':
+        const activeItem = document.querySelector('.on');
+        if (!activeItem) break;
+        if (activeItem === activeItem.parentElement.firstElementChild) {
+          const prevListBox = activeItem.parentElement.previousElementSibling?.previousElementSibling;
+          if (prevListBox?.classList.contains('list-box')) {
+            prevListBox.querySelector('li:last-child a')?.click();
+          } else {
+            const prevSection = activeItem.closest('.section-list').previousElementSibling;
+            if (prevSection?.classList.contains('section-list')) {
+              prevSection.querySelector('li:last-child a')?.click();
+            }
+          }
+        } else {
+          activeItem.previousElementSibling?.querySelector('a')?.click();
+        }
+        break;
+      case 'ArrowDown':
+        const activeItemDown = document.querySelector('.on');
+        if (!activeItemDown) break;
+        if (activeItemDown === activeItemDown.parentElement.lastElementChild) {
+          const nextListBox = activeItemDown.parentElement.nextElementSibling?.nextElementSibling;
+          if (nextListBox?.classList.contains('list-box')) {
+            nextListBox.querySelector('li:first-child a')?.click();
+          } else {
+            const nextSection = activeItemDown.closest('.section-list').nextElementSibling;
+            if (nextSection?.classList.contains('section-list')) {
+              nextSection.querySelector('ul:first-of-type li:first-child a')?.click();
+            }
+          }
+        } else {
+          activeItemDown.nextElementSibling?.querySelector('a')?.click();
+        }
+        break;
+      default:
+        return;
+    }
+  });
+}
+
+function indexView() {
+  // index_view 추가
+  const indexViewDiv = document.createElement('div');
+  indexViewDiv.id = 'index_view';
+  indexViewDiv.style.width = '750px'; // 고정 너비 설정 (scrollbarWidth 제외)
+  indexViewDiv.innerHTML = '<iframe src="" frameborder="0" style="width:100%"></iframe>';
+  document.body.appendChild(indexViewDiv);
+
+  changeSrc();
+
+  // preview-box 추가
+  const previewBox = document.createElement('div');
+  previewBox.id = 'preview-box';
+  previewBox.style.cssText = 'position:fixed;top:80px;left:30%;line-height:0;z-index:10;';
+  previewBox.innerHTML = `
+    <button type="button" style="height:20px;margin-right:4px;border:0;border-radius:4px;background:#777;color:#fff;font-size:11px;">375px</button>
+    <button type="button" style="height:20px;margin-right:4px;border:0;border-radius:4px;background:#777;color:#fff;font-size:11px;">750px</button>
+    <button type="button" style="height:20px;margin-right:4px;border:0;border-radius:4px;background:#777;color:#fff;font-size:11px;">100%</button>
+  `;
+  document.body.appendChild(previewBox);
+
+  // 버튼 이벤트 추가
+  const buttons = previewBox.querySelectorAll('button');
+  buttons[0].addEventListener('click', () => {
+    indexViewDiv.style.width = '375px'; // 고정 너비
+  });
+  buttons[1].addEventListener('click', () => {
+    indexViewDiv.style.width = '750px'; // 고정 너비
+  });
+  buttons[2].addEventListener('click', () => {
+    indexViewDiv.style.right = '10px';
+    indexViewDiv.style.width = 'auto';
+    indexViewDiv.querySelector('iframe').style.width = '100%';
+  });
+}
+
+document.querySelector('.preview_btn').addEventListener('click', indexView);
+
+// Search 기능
+const categoryList = ['All'];
+const categoryUnique = [];
+const sectionList = document.querySelectorAll('.section-list');
+const categorySelect = document.querySelector('#index-search-from-menu');
+const dateLabel = document.querySelectorAll('.section-list .label-date');
+const dateSelect = document.querySelector('#index-search-from-date');
+const dateList = ['Default'];
+const dateUnique = [];
+const searchKeyword = document.querySelector('#index-search-by-keyword');
+let searchValue = null;
+
+function hiddenList() {
+  sectionList.forEach(section => {
+    section.style.display = 'none';
+    section.querySelectorAll('h2, h3, ul, li').forEach(item => {
+      item.style.display = 'none';
+    });
+  });
+}
+
+function showList(index) {
+  if (index === undefined) {
+    sectionList.forEach(section => {
+      section.style.display = '';
+      section.querySelectorAll('h2, h3, ul, li').forEach(item => {
+        item.style.display = '';
+      });
+    });
+  } else {
+    const targetSection = sectionList[index - 1];
+    if (targetSection) {
+      targetSection.style.display = '';
+      targetSection.querySelectorAll('h2, h3, ul, li').forEach(item => {
+        item.style.display = '';
+      });
+    }
+  }
+}
+
+function resetStyle() {
+  searchKeyword.value = '';
+  document.querySelectorAll('.section-list li a').forEach(link => {
+    link.classList.remove('matching_keywords');
+  });
+}
+
+function setCategory() {
+  const h2Elements = document.querySelectorAll('.section-list h2');
+  if (h2Elements.length > 0) {
+    h2Elements.forEach((h2, index) => {
+      const text = h2.textContent.trim();
+      if (text && !categoryList.includes(text)) {
+        categoryList.push(text);
+      }
+    });
+
+    categoryList.forEach(item => {
+      if (!categoryUnique.includes(item) && item.trim()) {
+        categoryUnique.push(item);
+      }
+    });
+
+    categoryUnique.forEach((item, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = item;
+      categorySelect.appendChild(option);
+    });
+
+    categorySelect.addEventListener('change', function() {
+      const value = this.value;
+      if (value === '0') {
+        showList();
+      } else {
+        dateSelect.value = 'Default';
+        resetStyle();
+        hiddenList();
+        showList(value);
+        document.querySelectorAll('.section-list h2').forEach((h2, idx) => {
+          if (idx == value - 1) {
+            h2.style.display = '';
+            let sibling = h2.nextElementSibling;
+            while (sibling) {
+              if (sibling.tagName === 'H3') {
+                sibling.style.display = '';
+                const ul = sibling.nextElementSibling;
+                if (ul && ul.tagName === 'UL') {
+                  ul.style.display = '';
+                  ul.querySelectorAll('li').forEach(li => {
+                    li.style.display = '';
+                  });
+                }
+              }
+              sibling = sibling.nextElementSibling;
+            }
+          }
+        });
+      }
+    });
+  } else {
+    document.querySelector('.index-search-menu').style.display = 'none';
+  }
+}
+
+function setDate() {
+  if (dateLabel.length > 0) {
+    dateLabel.forEach(label => {
+      const text = label.textContent.trim();
+      if (text && !dateList.includes(text)) {
+        dateList.push(text);
+      }
+    });
+
+    dateList.forEach(item => {
+      if (!dateUnique.includes(item) && item.trim()) {
+        dateUnique.push(item);
+      }
+    });
+
+    dateUnique.sort();
+    if (dateUnique.length > 0) {
+      const last = dateUnique.pop();
+      dateUnique.unshift(last);
+    }
+
+    dateUnique.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item;
+      option.textContent = item;
+      dateSelect.appendChild(option);
+    });
+
+    dateSelect.addEventListener('change', function() {
+      const value = this.value;
+      if (value === 'Default') {
+        showList();
+      } else {
+        categorySelect.value = '0';
+        resetStyle();
+        hiddenList();
+        document.querySelectorAll('.section-list .label-date').forEach(label => {
+          if (label.textContent === value) {
+            const section = label.closest('.section-list');
+            section.style.display = '';
+            section.querySelectorAll('h2').forEach(h2 => {
+              h2.style.display = '';
+            });
+            const ul = label.closest('ul');
+            if (ul) {
+              ul.style.display = '';
+              ul.querySelectorAll('li').forEach(li => {
+                li.style.display = '';
+              });
+              const h3 = ul.previousElementSibling;
+              if (h3 && h3.tagName === 'H3') {
+                h3.style.display = '';
+              }
+            }
+          }
+        });
+      }
+    });
+  } else {
+    document.querySelector('.index-search-date').style.display = 'none';
+  }
+}
+
+function searchFromKeyword() {
+  searchKeyword.addEventListener('keyup', function() {
+    searchValue = this.value;
+    categorySelect.value = '0';
+    dateSelect.value = 'Default';
+    if (searchValue.length !== 0) {
+      hiddenList();
+      document.querySelectorAll('.section-list li').forEach(li => {
+        const link = li.querySelector('a');
+        if (link && link.textContent.toLowerCase().includes(searchValue.toLowerCase())) {
+          const section = li.closest('.section-list');
+          section.style.display = '';
+          section.querySelectorAll('h2').forEach(h2 => {
+            h2.style.display = '';
+          });
+          const ul = li.closest('ul');
+          if (ul) {
+            ul.style.display = '';
+            const h3 = ul.previousElementSibling;
+            if (h3 && h3.tagName === 'H3') {
+              h3.style.display = '';
+            }
+          }
+          li.style.display = '';
+          link.classList.add('matching_keywords');
+        }
+      });
+    } else {
+      showList();
+      document.querySelectorAll('.section-list li a').forEach(link => {
+        link.classList.remove('matching_keywords');
+      });
+    }
+  });
+}
+
+window.addEventListener('load', function() {
+  setCategory();
+  setDate();
+  searchFromKeyword();
+});
+</script>
+</body>
+</html>
