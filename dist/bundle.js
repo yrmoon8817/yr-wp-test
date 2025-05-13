@@ -164,7 +164,7 @@ eval("/** @typedef {\"info\" | \"warning\" | \"error\"} LogLevel */\n\n/** @type
   \**********************/
 /***/ ((module) => {
 
-eval("console.log('실행됨')\nif (true) {\n  module.hot.accept((err) => {\n    if (err) {\n      console.error('HMR 오류:', err);\n    }\n  });\n}\n\n//# sourceURL=webpack://only-webpack/./src/index.js?");
+eval("console.log('실행됨')\r\nif (true) {\r\n  module.hot.accept((err) => {\r\n    if (err) {\r\n      console.error('HMR 오류:', err);\r\n    }\r\n  });\r\n}\n\n//# sourceURL=webpack://only-webpack/./src/index.js?");
 
 /***/ })
 
@@ -247,7 +247,7 @@ eval("console.log('실행됨')\nif (true) {\n  module.hot.accept((err) => {\n   
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("1c418b42dff68a262d8f")
+/******/ 		__webpack_require__.h = () => ("6be694922c526e8fd0b8")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

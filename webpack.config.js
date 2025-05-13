@@ -2,12 +2,81 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const cheerio = require('cheerio');
+const fs = require('fs-extra');
 
+const generateHTML = async () => {
+  const dirPath = 'dist/views/';
+  const pathArr = await fs.promises.readdir(dirPath);
+  const dirPathArr = pathArr.map(path => `${dirPath}${path}`);
 
-module.exports =(env)=> {
+  let fileObjArr = [];
+  let categories = [];
+  let projectJson = JSON.parse(await fs.promises.readFile('templates/projectInfo.json', 'utf-8'));
+  let projectInfo = {
+    projectName: projectJson.project_name,
+    projectAuthor: projectJson.author,
+    projectOrg: projectJson.organization,
+  };
+
+  await Promise.all(
+    dirPathArr.map(async (pathname, idx) => {
+      const files = await fs.promises.readdir(pathname);
+      const htmlFiles = files.filter(file => file.endsWith('.html'));
+
+      for (const file of htmlFiles) {
+        const filePath = `${pathname}/${file}`;
+        const stats = await fs.promises.stat(filePath);
+        const fileInnerText = await fs.promises.readFile(filePath, 'utf8');
+        const $ = cheerio.load(fileInnerText);
+
+        let wholeTitle = $('meta[name="list"]').attr('content') || $('title').text();
+        let splitTitle = wholeTitle.split(' : ');
+        let pageStatus = $('body').data('pagestatus');
+        let splitStatus = pageStatus ? pageStatus.split(' : ') : null;
+
+        let fileData = {
+          title: splitTitle[0],
+          name: file,
+          category: file.substring(0, 2),
+          categoryText: splitTitle[1],
+          listTitle: wholeTitle,
+          mdate: stats.mtime,
+        };
+
+        if (splitStatus) {
+          fileData.splitStatus = splitStatus[0];
+          fileData.splitStatusDate = splitStatus[1];
+        }
+
+        if (!fileObjArr[idx]) fileObjArr[idx] = [{ theme: pathArr[idx] }];
+        fileObjArr[idx].push(fileData);
+
+        if (!categories.includes(fileData.category)) categories.push(fileData.category);
+
+        if ($('meta[name="list"]').length) {
+          $('meta[name="list"]').remove();
+          await fs.promises.writeFile(filePath, $.html({ decodeEntities: false }));
+        }
+      }
+    })
+  );
+
+  let projectObj = {
+    project: projectInfo,
+    files: fileObjArr,
+  };
+  return projectObj;
+  // return src('templates/@index.html')
+  //   .pipe(ejs(projectObj))
+  //   .pipe(dest('dist/'))
+  //   .on('end', done);
+};
+module.exports = async (env)=> {
   let entryPath = env.mode ==='production'? './dist/index.js':'./src/index.js';
-
-  return{
+  const info = await generateHTML();
+  console.log(info.files)
+  return {
   entry:entryPath,
   mode:env.mode==="production"? 'production' : 'development',
   entry: entryPath,
@@ -20,54 +89,29 @@ module.exports =(env)=> {
   module:{
     rules:[
       {
-        test: /\.ejs$/,
+        test: /\.ejs$/i,
         use: [
           {
-            loader:'ejs-loader',
+            loader:['ejs-easy-loader'],
             options: {
-              esModule: false
+              esModule: false,
             }
           }
-        ]
+        ],
       }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './index.ejs', // EJS 템플릿 경로
+      template: './index.html',
       filename: 'index.html',
       templateParameters: {
         project:{
-          projectName: '샘플 프로젝트',
-          projectOrg: 'Hivelab',
-          projectAuthor: 'IUI'
+          projectName: info.project.projectName,
+          projectOrg: info.project.projectOrg,
+          projectAuthor: info.project.projectAuthor
         },
-        files: [
-          [
-            { theme: '폴더1' },
-            {
-              name: 'page1.html',
-              listTitle: '페이지 1 : 첫 번째 페이지',
-              splitStatus: 'new',
-              splitStatusDate: '2025-04-11',
-            },
-            {
-              name: 'page2.html',
-              listTitle: '페이지 2 : 두 번째 페이지',
-              splitStatus: 'update',
-              splitStatusDate: '2025-04-10',
-            },
-          ],
-          [
-            { theme: '폴더2' },
-            {
-              name: 'page3.html',
-              listTitle: '페이지 3 : 세 번째 페이지',
-              splitStatus: null,
-              splitStatusDate: null,
-            },
-          ],
-        ]
+        files: info.files
       }
     }),
     new CopyWebpackPlugin({
@@ -95,7 +139,7 @@ module.exports =(env)=> {
       devMiddleware: {
         writeToDisk: true,
       },
-      watchFiles: ['src/*', 'index.ejs'],
+      watchFiles: ['src/*', 'index.html'],
       headers: {
         'Cache-Control': 'no-store',
       },

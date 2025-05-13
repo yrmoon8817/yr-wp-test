@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>샘플 프로젝트 : 마크업 산출물</title>
+<title>gulp template : 마크업 산출물</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 *{margin:0;padding:0;font-family: "Noto Sans KR", sans-serif;}
@@ -61,7 +61,7 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 <script defer src="bundle.js"></script></head>
 <body>
 	<header class="index-header">
-		<h1 class="index-title">샘플 프로젝트 : 마크업 산출물 <button type="button" class="preview_btn">Preview</button></h1>
+		<h1 class="index-title">gulp template : 마크업 산출물 <button type="button" class="preview_btn">Preview</button></h1>
 		
 		<ul class="index-search">
 			<li class="index-search-menu">
@@ -85,10 +85,8 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 		<h3 class="sub-title cate">폴더1</h3>
 		<ul class="index-category-list">
 		
-				<li class="index-cate-item"><a href="#tab0-1">첫 번째 페이지</a></li>
+				<li class="index-cate-item"><a href="#tab0-1"></a></li>
 			
-			
-				<li class="index-cate-item"><a href="#tab0-2">두 번째 페이지</a></li>
 			
 			
 		</ul>	
@@ -96,7 +94,7 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 		<h3 class="sub-title cate">폴더2</h3>
 		<ul class="index-category-list">
 		
-				<li class="index-cate-item"><a href="#tab1-1">세 번째 페이지</a></li>
+				<li class="index-cate-item"><a href="#tab1-1"></a></li>
 			
 			
 		</ul>	
@@ -109,15 +107,13 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 	<section class="section-list">
 				<h2 id="tab_doc" class="index-title">폴더1</h2>
 					
-				 <h3 id="tab0-1" class="sec_h sub-title">첫 번째 페이지</h3><ul class="list-box">
+				 <h3 id="tab0-1" class="sec_h sub-title"></h3><ul class="list-box">
 				
-					<li class="index-section-item"><a class="index-link" href="views/폴더1/page1.html"><span class="index-link-title">페이지 1</span><span class="filename">views/폴더1/page1.html</span></a>
-						<span class="label-date new">2025-04-11</span>
-						</li></ul>	
-				 <h3 id="tab0-2" class="sec_h sub-title">두 번째 페이지</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/폴더1/page2.html"><span class="index-link-title">페이지 2</span><span class="filename">views/폴더1/page2.html</span></a>
-						<span class="label-date update">2025-04-10</span>
+					<li class="index-section-item"><a class="index-link" href="views/폴더1/page1.html"><span class="index-link-title"></span><span class="filename">views/폴더1/page1.html</span></a>
+						<span class="label-date new">2024.08.01</span>
+						</li>
+					<li class="index-section-item"><a class="index-link" href="views/폴더1/page2.html"><span class="index-link-title"></span><span class="filename">views/폴더1/page2.html</span></a>
+						<span class="label-date new">2024.08.01</span>
 						</li>
 						</ul>
 		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
@@ -126,15 +122,17 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 	<section class="section-list">
 				<h2 id="tab_doc" class="index-title">폴더2</h2>
 					
-				 <h3 id="tab1-1" class="sec_h sub-title">세 번째 페이지</h3><ul class="list-box">
+				 <h3 id="tab1-1" class="sec_h sub-title"></h3><ul class="list-box">
 				
-					<li class="index-section-item"><a class="index-link" href="views/폴더2/page3.html"><span class="index-link-title">페이지 3</span><span class="filename">views/폴더2/page3.html</span></a></li>
+					<li class="index-section-item"><a class="index-link" href="views/폴더2/page3.html"><span class="index-link-title"></span><span class="filename">views/폴더2/page3.html</span></a>
+						<span class="label-date new">2024.08.01</span>
+						</li>
 						</ul>
 		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
 	</section>
 	
 	<footer class="index-footer">
-		<p class="index-info"><strong>Hivelab</strong> / Hivelab / IUI</p>
+		<p class="index-info"><strong>Hivelab</strong> / 조직명 / author name</p>
 	</footer>
 <script>
 	// Preview 기능
