@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>gulp template : 마크업 산출물</title>
+<title>webpack template : 마크업 산출물</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 *{margin:0;padding:0;font-family: "Noto Sans KR", sans-serif;}
@@ -26,7 +26,7 @@ input,button, select{outline:none;border:0;}
 .index-section-category a{color:#555;font-size:12px;}
 .sub-title{padding:10px;font-size:17px;font-weight:700;border-bottom:1px solid #999;scroll-margin-top:50px; color:#222;scroll-margin-top:100px;}
 .index-section-category .index-title,
-.section-list .index-title {color:#18407e;background-color:#cfd8e4;}
+.section-list .index-title {color:#18407e;}
 .index-section-category .sub-title.cate {font-size:14px; border-bottom:1px solid #333;padding:5px 10px;box-sizing: border-box;}
 section .index-cate-item{padding:4px 10px;border-bottom:1px solid #ddd;box-sizing: border-box;}
 section .index-title{padding:8px;font-size:22px;font-weight:700;color:#2d2d2d;border-bottom:2px solid #2d2d2d;}
@@ -61,7 +61,7 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 <script defer src="bundle.js"></script></head>
 <body>
 	<header class="index-header">
-		<h1 class="index-title">gulp template : 마크업 산출물 <button type="button" class="preview_btn">Preview</button></h1>
+		<h1 class="index-title">webpack template : 마크업 산출물 <button type="button" class="preview_btn">Preview</button></h1>
 		
 		<ul class="index-search">
 			<li class="index-search-menu">
@@ -85,8 +85,10 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 		<h3 class="sub-title cate">폴더1</h3>
 		<ul class="index-category-list">
 		
-				<li class="index-cate-item"><a href="#tab0-1"></a></li>
+				<li class="index-cate-item"><a href="#tab0-1">category title1</a></li>
 			
+			
+				<li class="index-cate-item"><a href="#tab0-2">category title2</a></li>
 			
 			
 		</ul>	
@@ -94,7 +96,18 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 		<h3 class="sub-title cate">폴더2</h3>
 		<ul class="index-category-list">
 		
-				<li class="index-cate-item"><a href="#tab1-1"></a></li>
+				<li class="index-cate-item"><a href="#tab1-1">category title2</a></li>
+			
+			
+		</ul>	
+		
+		<h3 class="sub-title cate">폴더3</h3>
+		<ul class="index-category-list">
+		
+				<li class="index-cate-item"><a href="#tab2-1">category title3</a></li>
+			
+			
+				<li class="index-cate-item"><a href="#tab2-2">category title4</a></li>
 			
 			
 		</ul>	
@@ -107,12 +120,14 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 	<section class="section-list">
 				<h2 id="tab_doc" class="index-title">폴더1</h2>
 					
-				 <h3 id="tab0-1" class="sec_h sub-title"></h3><ul class="list-box">
+				 <h3 id="tab0-1" class="sec_h sub-title">category title1</h3><ul class="list-box">
 				
-					<li class="index-section-item"><a class="index-link" href="views/폴더1/page1.html"><span class="index-link-title"></span><span class="filename">views/폴더1/page1.html</span></a>
+					<li class="index-section-item"><a class="index-link" href="views/폴더1/00_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/폴더1/00_01_page1.html</span></a>
 						<span class="label-date new">2024.08.01</span>
-						</li>
-					<li class="index-section-item"><a class="index-link" href="views/폴더1/page2.html"><span class="index-link-title"></span><span class="filename">views/폴더1/page2.html</span></a>
+						</li></ul>	
+				 <h3 id="tab0-2" class="sec_h sub-title">category title2</h3><ul class="list-box">
+				
+					<li class="index-section-item"><a class="index-link" href="views/폴더1/00_02_page2.html"><span class="index-link-title">document title</span><span class="filename">views/폴더1/00_02_page2.html</span></a>
 						<span class="label-date new">2024.08.01</span>
 						</li>
 						</ul>
@@ -122,9 +137,26 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 	<section class="section-list">
 				<h2 id="tab_doc" class="index-title">폴더2</h2>
 					
-				 <h3 id="tab1-1" class="sec_h sub-title"></h3><ul class="list-box">
+				 <h3 id="tab1-1" class="sec_h sub-title">category title2</h3><ul class="list-box">
 				
-					<li class="index-section-item"><a class="index-link" href="views/폴더2/page3.html"><span class="index-link-title"></span><span class="filename">views/폴더2/page3.html</span></a>
+					<li class="index-section-item"><a class="index-link" href="views/폴더2/01_page3.html"><span class="index-link-title">document title</span><span class="filename">views/폴더2/01_page3.html</span></a>
+						<span class="label-date new">2024.08.01</span>
+						</li>
+						</ul>
+		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
+	</section>
+	
+	<section class="section-list">
+				<h2 id="tab_doc" class="index-title">폴더3</h2>
+					
+				 <h3 id="tab2-1" class="sec_h sub-title">category title3</h3><ul class="list-box">
+				
+					<li class="index-section-item"><a class="index-link" href="views/폴더3/01_page4.html"><span class="index-link-title">document title</span><span class="filename">views/폴더3/01_page4.html</span></a>
+						<span class="label-date new">2024.08.01</span>
+						</li></ul>	
+				 <h3 id="tab2-2" class="sec_h sub-title">category title4</h3><ul class="list-box">
+				
+					<li class="index-section-item"><a class="index-link" href="views/폴더3/02_page5.html"><span class="index-link-title">document title</span><span class="filename">views/폴더3/02_page5.html</span></a>
 						<span class="label-date new">2024.08.01</span>
 						</li>
 						</ul>
@@ -192,10 +224,11 @@ function changeSrc() {
           } else {
             const prevSection = activeItem.closest('.section-list').previousElementSibling;
             if (prevSection?.classList.contains('section-list')) {
-              prevSection.querySelector('li:last-child a')?.click();
+              prevSection.querySelector('ul:last-of-type li:last-child a')?.click();
             }
           }
-        } else {
+        }
+        else {
           activeItem.previousElementSibling?.querySelector('a')?.click();
         }
         break;

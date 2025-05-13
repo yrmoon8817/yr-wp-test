@@ -26,7 +26,7 @@ input,button, select{outline:none;border:0;}
 .index-section-category a{color:#555;font-size:12px;}
 .sub-title{padding:10px;font-size:17px;font-weight:700;border-bottom:1px solid #999;scroll-margin-top:50px; color:#222;scroll-margin-top:100px;}
 .index-section-category .index-title,
-.section-list .index-title {color:#18407e;background-color:#cfd8e4;}
+.section-list .index-title {color:#18407e;}
 .index-section-category .sub-title.cate {font-size:14px; border-bottom:1px solid #333;padding:5px 10px;box-sizing: border-box;}
 section .index-cate-item{padding:4px 10px;border-bottom:1px solid #ddd;box-sizing: border-box;}
 section .index-title{padding:8px;font-size:22px;font-weight:700;color:#2d2d2d;border-bottom:2px solid #2d2d2d;}
@@ -82,7 +82,7 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 	<section class="index-section-category" id="cate-top">
 		<h2 class="index-title">카테고리 바로가기</h2>
 		<%
-		var list = files || [];
+		var list = info2.files || [];
 		var cateArr = [];
 		 for( let f=0; f< list.length; f+=1) {%>
 		<h3 class="sub-title cate"><%=list[f][0].theme%></h3>
@@ -94,7 +94,7 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 		for( let x=1; x< list[f].length; x+=1) {
 			if(titleArr){
 				titleArr.forEach((item,index)=>{
-					if(titleArr[index]==list[f][x].listTitle.split(' : ')[1]){
+					if(titleArr[index]==info2.files[f][x].listTitle.split(' : ')[1]){
 						count++;
 					}
 					if(index === titleArr.length-1){
@@ -108,8 +108,8 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 					}
 				})
 			}
-			if(check || titleArr.length===0){ titleArr.push(list[f][x].listTitle.split(' : ')[1]) %>
-				<li class="index-cate-item"><a href="#tab<%=`${f}-${x}`%>"><%=list[f][x].listTitle.split(' : ')[1]%></a></li>
+			if(check || titleArr.length===0){ titleArr.push(info2.files[f][x].listTitle.split(' : ')[1]) %>
+				<li class="index-cate-item"><a href="#tab<%=`${f}-${x}`%>"><%=info2.files[f][x].listTitle.split(' : ')[1]%></a></li>
 			<%}%>
 			<%}%>
 		</ul>	
@@ -119,7 +119,7 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 		<span class="label-date new"></span> NEW <span class="label-date update"></span> UPDATE
 	</section>
 		<%
-		var list = files;
+		var list = info2.files;
 		var cateArr = [];
 		 for( let g=0; g < list.length; g+=1) {%>
 	<section class="section-list">
@@ -131,7 +131,7 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 				for( let w=1; w< list[g].length; w+=1){
 					if(titleArr){
 						titleArr.forEach((item,index)=>{
-							if(titleArr[index]==list[g][w].listTitle.split(' : ')[1]){
+							if(titleArr[index]==info2.files[g][w].listTitle.split(' : ')[1]){
 								count++;
 							}
 							if(index === titleArr.length-1){
@@ -145,10 +145,10 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 							}
 						})
 					}
-				if(check || titleArr.length===0){ if(titleArr.length!==0){%></ul><%} titleArr.push(list[g][w].listTitle.split(' : ')[1]) %>	
-				 <h3 id="tab<%=`${g}-${w}`%>" class="sec_h sub-title"><%=list[g][w].listTitle.split(' : ')[1]%></h3><ul class="list-box">
+				if(check || titleArr.length===0){ if(titleArr.length!==0){%></ul><%} titleArr.push(info2.files[g][w].listTitle.split(' : ')[1]) %>	
+				 <h3 id="tab<%=`${g}-${w}`%>" class="sec_h sub-title"><%=info2.files[g][w].listTitle.split(' : ')[1]%></h3><ul class="list-box">
 				<%}%>
-					<li class="index-section-item"><a class="index-link" href="views/<%=list[g][0].theme%>/<%= list[g][w].name %>"><span class="index-link-title"><%=list[g][w].listTitle.split(' : ')[0]%></span><span class="filename">views/<%=list[g][0].theme%>/<%= list[g][w].name %></span></a><% if (list[g][w].splitStatus) { %>
+					<li class="index-section-item"><a class="index-link" href="views/<%=list[g][0].theme%>/<%= list[g][w].name %>"><span class="index-link-title"><%=info2.files[g][w].listTitle.split(' : ')[0]%></span><span class="filename">views/<%=list[g][0].theme%>/<%= list[g][w].name %></span></a><% if (list[g][w].splitStatus) { %>
 						<span class="label-date <%= list[g][w].splitStatus %>"><%= list[g][w].splitStatusDate %></span>
 						<%}%></li><%}%>
 						</ul>
@@ -216,10 +216,11 @@ function changeSrc() {
           } else {
             const prevSection = activeItem.closest('.section-list').previousElementSibling;
             if (prevSection?.classList.contains('section-list')) {
-              prevSection.querySelector('li:last-child a')?.click();
+              prevSection.querySelector('ul:last-of-type li:last-child a')?.click();
             }
           }
-        } else {
+        }
+        else {
           activeItem.previousElementSibling?.querySelector('a')?.click();
         }
         break;
