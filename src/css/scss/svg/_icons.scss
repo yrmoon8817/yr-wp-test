@@ -3,22 +3,28 @@
 
 .ic {
   &_apple_24px {
-    @include inline-svg-size(24px, 24px, 'ic_apple_24px.svg', none,none, #fc0);
+    display:inline-block;
+    @include inline-svg-size(24px, 24px, 'ic_apple_24px', none,none, #fc0);
   }
   &_bluetooth_24px {
-    @include inline-svg-size(24px, 24px, 'ic_bluetooth_24px.svg', none, none, #fc0);
+    display: inline-block;
+    @include inline-svg-size(24px, 24px, 'ic_bluetooth_24px', none, none, #fc0);
   }
   &_cat_24px {
-    @include inline-svg-size(24px, 24px, 'ic_cat_24px.svg', none, none, #fc0);
+    display: inline-block;
+    @include inline-svg-size(24px, 24px, 'ic_cat_24px', none, none, #fc0);
   }
   &_insta_24px {
-    @include inline-svg-size(24px, 24px, 'ic_insta_24px.svg', none, none, #fc0);
+    display: inline-block;
+    @include inline-svg-size(24px, 24px, 'ic_insta_24px', none, none, #fc0);
   }
   &_send_24px {
-    @include inline-svg-size(24px, 24px, 'ic_send_24px.svg', none, none, #fc0);
+    display: inline-block;
+    @include inline-svg-size(24px, 24px, 'ic_send_24px', none, none, #fc0);
   }
   &_wifi_24px {
-    @include inline-svg-size(24px, 24px, 'ic_wifi_24px.svg', none, none, #fc0);
+    display: inline-block;
+    @include inline-svg-size(24px, 24px, 'ic_wifi_24px', none, none, #fc0);
   }
 }
 

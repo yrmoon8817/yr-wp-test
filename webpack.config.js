@@ -4,20 +4,21 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const postcssInlineSvg = require('postcss-inline-svg');
 const cheerio = require('cheerio');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
 const fs = require('fs-extra');
 
-const generateHTML = async () => {
-  let projectJson = JSON.parse(await fs.promises.readFile('templates/projectInfo.json', 'utf-8'));
-  let projectInfo = {
-    projectName: projectJson.project_name,
-    projectAuthor: projectJson.author,
-    projectOrg: projectJson.organization,
-  };
-  return {
-    project: projectInfo,
-    files: [],
-  };
-};
+// const generateHTML = async () => {
+//   let projectJson = JSON.parse(await fs.promises.readFile('templates/projectInfo.json', 'utf-8'));
+//   let projectInfo = {
+//     projectName: projectJson.project_name,
+//     projectAuthor: projectJson.author,
+//     projectOrg: projectJson.organization,
+//   };
+//   return {
+//     project: projectInfo,
+//     files: [],
+//   };
+// };
 // class CollectMetaPlugin {
 //   constructor() {
 //     this.metaMap = new Map();
@@ -161,7 +162,12 @@ class CollectMetaDataPlugin {
   }
 }
 module.exports = async ()=> {
-    const info = await generateHTML();
+    const info = {
+      projectName: 'Webpack Template',
+      projectAuthor: 'Author',
+      projectOrg: 'IUI',
+      files:[]
+    };
     const htmlEl = [];
     const seen = new Set();
     const dirPath = 'src/views/';
@@ -198,6 +204,10 @@ module.exports = async ()=> {
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
+    cache: {
+    type: 'filesystem', 
+    cacheDirectory: path.resolve(__dirname, '.webpack_cache'),
+  },
   module:{
     rules:[
       {
@@ -216,23 +226,29 @@ module.exports = async ()=> {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
+          {
+            loader:'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  postcssInlineSvg({
+                    paths:[path.resolve(__dirname, 'src/img/svg')],
+                    encode:true
+                  })
+                ]
+              }
+            }
+          },
           'sass-loader'
-
-          // {
-          //   loader:'postcss-loader',
-          //   options: {
-          //     postcssOptions: {
-          //       plugins: [
-          //         postcssInlineSvg({
-          //           paths:[path.resolve(__dirname, 'src/img/svg')],
-          //           encode:true
-          //         })
-          //       ]
-          //     }
-          //   }
-          // },
         ]
       },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'img/[name][ext]'
+        }
+      }
     ]
   },
   plugins: [
@@ -251,18 +267,49 @@ module.exports = async ()=> {
       templateParameters: {
         info,
         project:{
-          projectName: info.project.projectName,
-          projectOrg: info.project.projectOrg,
-          projectAuthor: info.project.projectAuthor
+          projectName: info.projectName,
+          projectOrg: info.projectOrg,
+          projectAuthor: info.projectAuthor
         },
       }
     }),
     new CollectMetaDataPlugin(),
-    new BrowserSyncPlugin({
-      host: 'localhost',  //localhost로 사용
-      port: 8080,			//포트 3000을 사용  (이미 사용중이면 1씩 증가된 포트로 사용)
-      files: ['./dist/**'], //해당 경로 내 html 파일이 자동으로 동기화 (이 부분이 없으면 html파일 변경사항은 자동 동기화 안됨)
-      server: { baseDir: ['dist'] } // server의 Base 디렉토리를 dist로 지정
+    // new BrowserSyncPlugin({
+    //   host: 'localhost',  //localhost로 사용
+    //   port: 8080,			//포트 3000을 사용  (이미 사용중이면 1씩 증가된 포트로 사용)
+    //   files: ['./dist/**'], //해당 경로 내 html 파일이 자동으로 동기화 (이 부분이 없으면 html파일 변경사항은 자동 동기화 안됨)
+    //   server: { baseDir: ['dist'] } // server의 Base 디렉토리를 dist로 지정
+    // })
+    new ImageMinimizerPlugin({
+      test: /\.(jpe?g|png|gif|svg)$/i,
+      minimizer:{
+        implementation: ImageMinimizerPlugin.imageminMinify,
+        options:{
+          plugins: [
+            ['gifsicle', {interlaced:true}],
+            ['mozjpeg', {quality:80, progressive: true}],
+            ['optipng', {optimizationLevel:5},],
+            ['svgo', 
+              {
+                plugins: [
+                  {name: 'removeViewBox', active:true},
+                  {name: 'cleanupIDs', active:false}
+                ]
+              }
+            ]
+          ]
+        }
+      },
+      generator: [
+        {
+          type:'asset',
+          implementation:(content,resource)=>{
+            console.log(`Optimized: ${resource.filename} (${(content.length/1024).toFixed(2)}) KB`);
+            return content;
+          }
+        }
+
+      ]
     })
   ],
   // devtool: 'cheap-eval-source-map',
@@ -271,8 +318,8 @@ module.exports = async ()=> {
       directory: path.join(__dirname, 'dist'),
     },
     compress:true,
-    open:false,
-    hot: false,
+    open:true,
+    hot: true,
     liveReload: false,
       historyApiFallback: {
         index: '/index.html',
@@ -284,6 +331,8 @@ module.exports = async ()=> {
       headers: {
         'Cache-Control': 'no-store',
       },
+      host:'localhost',
+      port:8080,
     },
     watchOptions: {
       ignored: /node_modules/,
