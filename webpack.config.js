@@ -1,6 +1,8 @@
-var path = require('path');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const postcssInlineSvg = require('postcss-inline-svg');
 const cheerio = require('cheerio');
 const fs = require('fs-extra');
 
@@ -16,6 +18,64 @@ const generateHTML = async () => {
     files: [],
   };
 };
+// class CollectMetaPlugin {
+//   constructor() {
+//     this.metaMap = new Map();
+//   }
+
+//   apply(compiler) {
+//     compiler.hooks.thisCompilation.tap('CollectMetaPlugin', (compilation) => {
+//       const HtmlWebpackPlugin = require('html-webpack-plugin');
+//       const hooks = HtmlWebpackPlugin.getHooks;
+
+//       // 각 html 파일에서 메타데이터 추출
+//       hooks(compilation).beforeEmit.tapAsync('CollectMetaPlugin', (data, cb) => {
+//         const filename = data.outputName;
+//         const html = data.html;
+
+//         // 메타 태그 추출 로직
+//         const metaMatch = html.match(/<meta name="(.+?)" content="(.+?)">/g) || [];
+//         const metas = metaMatch.map((tag) => {
+//           const name = tag.match(/name="(.+?)"/)?.[1];
+//           const content = tag.match(/content="(.+?)"/)?.[1];
+//           return { name, content };
+//         });
+
+//         // 메타 정보 누적
+//         this.metaMap.set(filename, metas);
+
+//         cb(null, data);
+//       });
+
+//       // 모든 HTML 파일 처리가 끝난 뒤 index.html을 수정
+//       compilation.hooks.afterSeal.tapPromise('CollectMetaPlugin', async () => {
+//         const indexAssetName = 'index.html';
+//         const asset = compilation.assets[indexAssetName];
+
+//         if (!asset) return;
+
+//         let indexHtml = asset.source();
+
+//         const metaListHtml = Array.from(this.metaMap.entries())
+//           .filter(([filename]) => filename !== indexAssetName)
+//           .map(([filename, metas]) => {
+//             const metaText = metas.map(({ name, content }) => `<li>${name}: ${content}</li>`).join('');
+//             return `<li><strong>${filename}</strong><ul>${metaText}</ul></li>`;
+//           }).join('');
+
+//         const marker = '<!-- __META_LIST__ -->';
+//         indexHtml = indexHtml.replace(marker, `<ul>${metaListHtml}</ul>`);
+
+//         // 최종 결과를 다시 자산에 등록
+//         compilation.assets[indexAssetName] = {
+//           source: () => indexHtml,
+//           size: () => indexHtml.length,
+//         };
+//       });
+//     });
+//   }
+// }
+
 
 class CollectMetaDataPlugin {
   apply(compiler) {
@@ -24,7 +84,7 @@ class CollectMetaDataPlugin {
       // HtmlWebpackPlugin의 beforeEmit 훅
       HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync(
         'CollectMetaDataPlugin',
-        (data, callback) => {
+      (data, callback) => {
           // index.html은 제외
           if (data.plugin.options.filename === 'index.html') {
             callback(null);
@@ -62,6 +122,7 @@ class CollectMetaDataPlugin {
 
           // 메타 데이터 저장
           metaDataStore.push(fileData);
+          // 비동기적으로 디스크에 저장
           callback(null);
         }
       );
@@ -128,9 +189,12 @@ module.exports = async ()=> {
   return {
   entry:entryPath,
   mode:'development',
-  entry: entryPath,
+  entry: {
+    main:entryPath,
+    style: './src/css/scss/project.scss'
+  },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
@@ -146,10 +210,35 @@ module.exports = async ()=> {
             }
           }
         ],
-      }
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader'
+
+          // {
+          //   loader:'postcss-loader',
+          //   options: {
+          //     postcssOptions: {
+          //       plugins: [
+          //         postcssInlineSvg({
+          //           paths:[path.resolve(__dirname, 'src/img/svg')],
+          //           encode:true
+          //         })
+          //       ]
+          //     }
+          //   }
+          // },
+        ]
+      },
     ]
   },
   plugins: [
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].css', // 출력 CSS 파일명
+    }),
     ...htmlEl.map((el) => {
       return new HtmlWebpackPlugin({
         template: path.resolve(el.dir, el.file),
@@ -172,7 +261,7 @@ module.exports = async ()=> {
     new BrowserSyncPlugin({
       host: 'localhost',  //localhost로 사용
       port: 8080,			//포트 3000을 사용  (이미 사용중이면 1씩 증가된 포트로 사용)
-      files: ['./dist/**/*.html'], //해당 경로 내 html 파일이 자동으로 동기화 (이 부분이 없으면 html파일 변경사항은 자동 동기화 안됨)
+      files: ['./dist/**'], //해당 경로 내 html 파일이 자동으로 동기화 (이 부분이 없으면 html파일 변경사항은 자동 동기화 안됨)
       server: { baseDir: ['dist'] } // server의 Base 디렉토리를 dist로 지정
     })
   ],
@@ -183,25 +272,21 @@ module.exports = async ()=> {
     },
     compress:true,
     open:false,
-    hot: true,
-    liveReload: true,
+    hot: false,
+    liveReload: false,
       historyApiFallback: {
         index: '/index.html',
       },
       devMiddleware: {
         writeToDisk: true,
       },
-      watchFiles: ['src/*', 'index.html'],
+      watchFiles: ['src/css/scss/*', 'index.html', 'src/views/*'],
       headers: {
         'Cache-Control': 'no-store',
       },
-      host: 'localhost',
-      allowedHosts: 'all',
     },
     watchOptions: {
       ignored: /node_modules/,
-      aggregateTimeout: 300,
-      poll: 1000,
     },
   }
 };

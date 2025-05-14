@@ -1,0 +1,815 @@
+// add prefix
+@mixin css3-prefix($property, $value) {
+	-webkit-#{$property}: #{$value};
+	-moz-#{$property}: #{$value};
+	-ms-#{$property}: #{$value};
+	#{$property}: #{$value};
+}
+
+// font-face
+@function str-replace($string, $search, $replace: "") {
+	$index: str-index($string, $search);
+
+	@if $index {
+		@return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+	}
+
+	@return $string;
+}
+
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+	$src: null;
+	$extmods: (
+		eot: "?",
+		svg: "#" + str-replace($name, " ", "_")
+	);
+$formats: (
+	otf: "opentype",
+	ttf: "truetype"
+);
+
+@each $ext in $exts {
+	$extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+	$format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+	$src: append($src, url(quote($path + "." + $extmod)) format(quote($format)),
+		comma);
+}
+
+@font-face {
+	font-family: quote($name);
+	font-style: $style;
+	font-weight: $weight;
+	src: $src;
+}
+}
+
+// font style (px)
+// font-size: px 단위 대응(단위 생략하고 숫자만 입력)
+// font-weight: value, common weight name 대응, 생략 가능
+// line-height: 단위 없는 경우, px 단위 대응(px 단위일 때 숫자 뒤에 px 붙여야 함), 생략 가능
+// @include font-style(16, 700, 22px)
+// @include font-style(12, normal, 1.5)
+// @include font-style(18, false, 1.8)
+// @include font-style(24)
+@function remove-unit($value) {
+	$calc:$value * 0 + 1;
+	@return (calc($value / $calc));
+}
+
+@mixin font-style($fonts, $fontw: false, $lineh: false) {
+	font-size: $fonts * 1px;
+
+	@if $fontw {
+		font-weight: $fontw;
+	}
+
+	@if $lineh {
+		@if $lineh=="normal" {
+			line-height: normal;
+		}
+
+		@else if unitless($lineh) {
+			line-height: $lineh;
+		}
+
+		@else {
+			line-height: remove-unit($lineh) * 1px;
+		}
+	}
+}
+
+// blind
+@mixin blind() {
+	overflow: hidden;
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	clip: rect(0 0 0 0);
+}
+
+// mixin inline svg icon
+@mixin inline-svg-size($sizew, $sizeh, $icon, $fill, $circlefill, $stroke) {
+	display: inline-block;
+	width: $sizew;
+	height: $sizeh;
+	@include inline-svg-icon($icon, $fill, $circlefill, $stroke);
+	background-size: 100% 100%;
+	vertical-align: middle;
+}
+
+// 중앙정렬
+@mixin set-center-x($type: absolute) {
+	@if ($type == fixed or $type == absolute) {
+		position: $type;
+		left: 50%;
+		@include css3-prefix('transform', 'translateX(-50%)');
+	}
+}
+
+@mixin set-center-y($type: absolute) {
+	@if ($type == fixed or $type == absolute) {
+		position: $type;
+		top: 50%;
+		@include css3-prefix('transform', 'translateY(-50%)');
+	}
+}
+
+@mixin set-center($type: absolute) {
+	@if ($type == fixed or $type == absolute) {
+		position: $type;
+		top: 50%;
+		left: 50%;
+		@include css3-prefix('transform', 'translate(-50%, -50%)');
+	}
+}
+
+// 말줄임 스타일
+@mixin ellipsis($line-num: 1, $display: null) {
+	@if $line-num > 1 {
+		display: block; //ie
+		display: -webkit-box;
+		-webkit-line-clamp: $line-num;
+		-webkit-box-orient: vertical;
+		white-space: normal;
+		word-break: break-all;
+	}
+
+	@else {
+		@if $display != null {
+			display: $display;
+		}
+
+		white-space: nowrap;
+	}
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+// 테이블 리셋
+@mixin set-table() {
+	display: table;
+	border-spacing: 0;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+@mixin background-gradient($startColor: #3C3C3C, $endColor: #999999) {
+	background-color: $startColor;
+	background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor));
+	background-image: -webkit-linear-gradient(top, $startColor, $endColor);
+	background-image: -moz-linear-gradient(top, $startColor, $endColor);
+	background-image: -ms-linear-gradient(top, $startColor, $endColor);
+	background-image: linear-gradient(top, $startColor, $endColor);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$startColor}', endColorStr='#{$endColor}');
+}
+
+@mixin background-horizontal($startColor: #3C3C3C, $endColor: #999999) {
+	background-color: $startColor;
+	background-image: -webkit-gradient(linear, left top, right top, from($startColor), to($endColor));
+	background-image: -webkit-linear-gradient(left, $startColor, $endColor);
+	background-image: -moz-linear-gradient(left, $startColor, $endColor);
+	background-image: -ms-linear-gradient(left, $startColor, $endColor);
+	background-image: linear-gradient(left, $startColor, $endColor);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$startColor}', endColorStr='#{$endColor}', gradientType='1');
+}
+
+@mixin background-horizontal-inverse($startColor: #999999, $endColor: #3C3C3C) {
+	background-color: $startColor;
+	background-image: -webkit-gradient(linear, right top, left top, from($startColor), to($endColor));
+	background-image: -webkit-linear-gradient(right, $startColor, $endColor);
+	background-image: -moz-linear-gradient(right, $startColor, $endColor);
+	background-image: -ms-linear-gradient(right, $startColor, $endColor);
+	background-image: linear-gradient(right, $startColor, $endColor);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#{$endColor}', endColorStr='#{$startColor}', gradientType='1');
+}
+
+@mixin background-radial($startColor: #FFFFFF, $startPos: 0%, $endColor: #000000, $endPos: 100%) {
+	background: -moz-radial-gradient(center, ellipse cover, $startColor $startPos, $endColor $endPos);
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop($startPos, $startColor), color-stop($endPos, $endColor));
+	background: -webkit-radial-gradient(center, ellipse cover, $startColor $startPos, $endColor $endPos);
+	background: -ms-radial-gradient(center, ellipse cover, $startColor $startPos, $endColor $endPos);
+	background: radial-gradient(ellipse at center, $startColor $startPos, $endColor $endPos);
+}
+
+@mixin background-size($width: 100%, $height: $width) {
+	@if type-of($width)=='number' and $height !=null {
+		@include css3-prefix('background-size', $width $height);
+	}
+
+	@else {
+		@include css3-prefix('background-size', $width);
+	}
+}
+
+@mixin background-opacity($color: #000, $opacity: 0.85) {
+	background: $color;
+	background: rgba($color, $opacity);
+}
+
+@mixin border-radius($radius: 5px) {
+	@include css3-prefix('border-radius', $radius);
+}
+
+@mixin border-radius-separate($topLeftRadius: 5px, $topRightRadius: 5px, $bottomLeftRadius: 5px, $bottomRightRadius: 5px) {
+	-webkit-border-top-left-radius: $topLeftRadius;
+	-webkit-border-top-right-radius: $topRightRadius;
+	-webkit-border-bottom-right-radius: $bottomRightRadius;
+	-webkit-border-bottom-left-radius: $bottomLeftRadius;
+	border-top-left-radius: $topLeftRadius;
+	border-top-right-radius: $topRightRadius;
+	border-bottom-right-radius: $bottomRightRadius;
+	border-bottom-left-radius: $bottomLeftRadius;
+}
+
+@mixin box-shadow($x: 2px, $y: 2px, $blur: 5px, $color: rgba(0, 0, 0, .4), $inset: "") {
+	@if ($inset !="") {
+		@include css3-prefix('box-shadow', $inset $x $y $blur $color);
+	}
+
+	@else {
+		@include css3-prefix('box-shadow', $x $y $blur $color);
+	}
+}
+
+@mixin opacity($opacity: 0.5) {
+	$opacityMultiplied: (
+		$opacity * 100
+	);
+filter: alpha(opacity=$opacityMultiplied);
+-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=" + $opacityMultiplied + ")";
+@include css3-prefix('opacity', $opacity);
+}
+
+@mixin rotate($deg: 0, $m11: 0, $m12: 0, $m21: 0, $m22: 0) {
+	@include css3-prefix('transform', rotate($deg + deg));
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=#{$m11}, M12=#{$m12}, M21=#{$m21}, M22=#{$m22}, sizingMethod='auto expand');
+	zoom: 1;
+}
+
+@mixin text-shadow($x: 2px, $y: 2px, $blur: 5px, $color: rgba(0, 0, 0, .4)) {
+	text-shadow: $x $y $blur $color;
+}
+
+@mixin transform($params) {
+	@include css3-prefix('transform', $params);
+}
+
+@mixin transition($properties...) {
+	@if length($properties)>=1 {
+		@include css3-prefix('transition', $properties);
+	}
+
+	@else {
+		@include css3-prefix('transition', "all 0.2s ease-in-out 0s");
+	}
+}
+
+@mixin keyframes($animation-name) {
+	@-webkit-keyframes #{$animation-name} {
+		@content;
+	}
+
+	@-moz-keyframes #{$animation-name} {
+		@content;
+	}
+
+	@-ms-keyframes #{$animation-name} {
+		@content;
+	}
+
+	@keyframes #{$animation-name} {
+		@content;
+	}
+}
+
+@mixin animation($str) {
+	@include css3-prefix('animation', $str);
+}
+
+@mixin absolute-full {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0
+}
+
+@mixin clearfix {
+
+	&:before,
+	&:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+}
+
+//flex mixin
+@mixin flexbox {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+
+// inline flex
+@mixin inline-flex {
+	display: -webkit-inline-box;
+	display: -webkit-inline-flex;
+	display: -ms-inline-flexbox;
+	display: inline-flex;
+}
+
+/* flex containers에 적용 */
+// flex-direction
+// row (default) | row-reverse | column | column-reverse
+@mixin flex-direction($direction: row) {
+	@if $direction ==row-reverse {
+		-webkit-box-orient: horizontal;
+		-webkit-box-direction: reverse;
+	}
+
+	@else if $direction ==column {
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+	}
+
+	@else if $direction ==column-reverse {
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: reverse;
+	}
+
+	@else {
+		-webkit-box-orient: horizontal;
+		-webkit-box-direction: normal;
+	}
+
+	-webkit-flex-direction: $direction;
+	-ms-flex-direction: $direction;
+	flex-direction: $direction;
+}
+
+// flex-wrap
+// nowrap | wrap | wrap-reverse
+@mixin flex-wrap($value: nowrap) {
+	-webkit-flex-wrap: $value;
+
+	@if $value ==nowrap {
+		-ms-flex-wrap: none;
+	}
+
+	@else {
+		-ms-flex-wrap: $value;
+	}
+
+	flex-wrap: $value;
+}
+
+// flex-flow
+// <flex-direction> || <flex-wrap>
+@mixin flex-flow($values: (row nowrap)) {
+	-webkit-flex-flow: $values;
+	-ms-flex-flow: $values;
+	flex-flow: $values;
+}
+
+// justify-content (수평 방향 정렬)
+// flex-start | flex-end | center | space-between | space-around
+@mixin justify-content($value: flex-start) {
+	@if $value ==flex-start {
+		-webkit-box-pack: start;
+		-ms-flex-pack: start;
+	}
+
+	@else if $value ==flex-end {
+		-webkit-box-pack: end;
+		-ms-flex-pack: end;
+	}
+
+	@else if $value ==space-between {
+		-webkit-box-pack: justify;
+		-ms-flex-pack: justify;
+	}
+
+	@else if $value ==space-around {
+		-ms-flex-pack: distribute;
+	}
+
+	@else {
+		-webkit-box-pack: $value;
+		-ms-flex-pack: $value;
+	}
+
+	-webkit-justify-content: $value;
+	justify-content: $value;
+}
+
+// align-items (수직 방향 정렬)
+// flex-start | flex-end | center | baseline | stretch
+@mixin align-items($value: stretch) {
+	@if $value ==flex-start {
+		-webkit-box-align: start;
+		-ms-flex-align: start;
+	}
+
+	@else if $value ==flex-end {
+		-webkit-box-align: end;
+		-ms-flex-align: end;
+	}
+
+	@else {
+		-webkit-box-align: $value;
+		-ms-flex-align: $value;
+	}
+
+	-webkit-align-items: $value;
+	align-items: $value;
+}
+
+// align-content
+// flex-wrap이 두줄 이상일 때 사용
+// flex-start | flex-end | center | space-between | space-around | stretch
+@mixin align-content($value: stretch) {
+	-webkit-align-content: $value;
+
+	@if $value ==flex-start {
+		-ms-flex-line-pack: start;
+	}
+
+	@else if $value ==flex-end {
+		-ms-flex-line-pack: end;
+	}
+
+	@else {
+		-ms-flex-line-pack: $value;
+	}
+
+	align-content: $value;
+}
+
+/* flex items에 적용 */
+// flex 단축 속성 ($fg: flex-grow, $fs: flex-shrink, $fb: flex-basis)
+// <positive-number>, initial, auto, or none
+// flex: initial -> @include flex(0 1 auto);
+// flex: auto -> @include flex(1 1 auto);
+// flex: none -> @include flex(0 0 auto);
+@mixin flex($fg: 1, $fs: null, $fb: null) {
+
+	// box-flex에서 사용할 변수 설정
+	$fg-boxflex: $fg;
+
+	// box-flex는 flex-grow값만 지원하기 때문에 list의 첫번째 항목만 가져와서 반환함
+	@if type-of($fg)=='list' {
+		$fg-boxflex: nth($fg, 1);
+	}
+
+	-webkit-box-flex: $fg-boxflex;
+	-webkit-flex: $fg $fs $fb;
+	-ms-flex: $fg $fs $fb;
+	flex: $fg $fs $fb;
+}
+
+// flex-grow
+// <number>
+@mixin flex-grow($int: 1) {
+	-webkit-box-flex: $int;
+	-webkit-flex-grow: $int;
+	-ms-flex: $int;
+	flex-grow: $int;
+}
+
+// flex-shrink
+// <number>
+@mixin flex-shrink($int: 0) {
+	-webkit-flex-shrink: $int;
+	-ms-flex: $int;
+	flex-shrink: $int;
+}
+
+// flex-basis
+// <width>
+@mixin flex-basis($value: auto) {
+	-webkit-flex-basis: $value;
+	flex-basis: $value;
+}
+
+// align-self
+// auto | flex-start | flex-end | center | baseline | stretch
+@mixin align-self($value: auto) {
+	-webkit-align-self: $value;
+
+	@if $value ==flex-start {
+		-ms-flex-item-align: start;
+	}
+
+	@else if $value ==flex-end {
+		-ms-flex-item-align: end;
+	}
+
+	@else {
+		-ms-flex-item-align: $value;
+	}
+
+	align-self: $value;
+}
+
+// order
+// <integer>
+@mixin order($int: 0) {
+	-webkit-box-ordinal-group: $int + 1;
+	-webkit-order: $int;
+	-ms-flex-order: $int;
+	order: $int;
+}
+
+@mixin multi-ellipsis($line) {
+	display: block;
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: $line;
+	-webkit-box-orient: vertical;
+	text-overflow: ellipsis;
+	word-break: break-all;
+}
+
+// font style (vw)
+// font-size: px, vw 단위 대응(단위 생략하고 숫자만 입력)
+// font-weight: value, common weight name 대응, 생략 가능
+// line-height: 단위 없는 경우, px, vw 단위 대응(px 기준으로 입력하면 vw값 계산됨, px 단위일 때 숫자 뒤에 px 붙여야 함), 생략 가능
+// @include vw-font-style-pc(16, 700, 22px)
+// @include vw-font-style-pc(12, normal, 1.5)
+// @include vw-font-style-pc(18, false, normal)
+@mixin vw-font-style-pc($pc-pixel, $pc-fw: false, $pc-lh: false) {
+	font-size: $pc-pixel * 1px;
+	font-size: calc($pc-pixel*100/1920) * 1vw;
+
+	@if $pc-fw {
+		font-weight: $pc-fw;
+	}
+
+	@if $pc-lh {
+		@if $pc-lh=="normal" {
+			line-height: normal;
+		}
+
+		@else if unitless($pc-lh) {
+			line-height: $pc-lh;
+		}
+
+		@else {
+			line-height: remove-unit($pc-lh) * 1px;
+			line-height: calc(remove-unit($pc-lh)*100/1920) * 1vw;
+		}
+	}
+
+	@media (min-width: $screen-xlg) {
+		font-size: $pc-pixel * 1px;
+
+		@if $pc-lh {
+			@if unitless($pc-lh)==false {
+				line-height: remove-unit($pc-lh) * 1px;
+			}
+		}
+	}
+}
+
+@mixin vw-font-style-tb($tb-pixel, $tb-fw: false, $tb-lh: false) {
+	font-size: $tb-pixel * 1px;
+	font-size: calc($tb-pixel*100/1366) * 1vw;
+
+	@if $tb-fw {
+		font-weight: $tb-fw;
+	}
+
+	@if $tb-lh {
+		@if $tb-lh=="normal" {
+			line-height: normal;
+		}
+
+		@else if unitless($tb-lh) {
+			line-height: $tb-lh;
+		}
+
+		@else {
+			line-height: remove-unit($tb-lh) * 1px;
+			line-height: calc(remove-unit($tb-lh)*100/1366) * 1vw;
+		}
+	}
+}
+
+@mixin vw-font-style-mo($mo-pixel, $mo-fw: false, $mo-lh: false) {
+	font-size: calc($mo-pixel / 414 * 828) * 1px;
+	font-size: calc($mo-pixel * 100 / 414) * 1vw;
+
+	@if $mo-fw {
+		font-weight: $mo-fw;
+	}
+
+	@if $mo-lh {
+		@if $mo-lh=="normal" {
+			line-height: normal;
+		}
+
+		@else if unitless($mo-lh) {
+			line-height: $mo-lh;
+		}
+
+		@else {
+			line-height: calc(remove-unit($mo-lh) / 414 * 828) * 1px;
+			line-height: calc(remove-unit($mo-lh) * 100 / 414) * 1vw;
+		}
+	}
+
+	@media (max-width: 414px) {
+		font-size: $mo-pixel*1px;
+		font-size: calc($mo-pixel * 100 / 414) * 1vw;
+
+		@if $mo-lh {
+			@if unitless($mo-lh)==false {
+				line-height: remove-unit($mo-lh) * 1px;
+				line-height: calc(remove-unit($mo-lh) * 100 / 414) * 1vw;
+			}
+		}
+	}
+}
+
+@mixin breakpoint($point) {
+	@if $point==desktop {
+		@media screen and (min-width: $screen-lg) {
+			@content;
+		}
+	}
+
+	@else if $point==tablet {
+		@media screen and (max-width: ($screen-lg - 1px)) {
+			@content;
+		}
+	}
+
+	@else if $point==mobile {
+		@media screen and (max-width: $screen-sm) {
+			@content;
+		}
+	}
+}
+
+@mixin vw-convert-pc($property, $pc-pixel) {
+	@if type-of($pc-pixel)==number {
+		#{$property}: $pc-pixel*1px;
+		#{$property}: calc($pc-pixel * 100 / 1920) * 1vw;
+
+		@media (min-width: $screen-xlg) {
+			#{$property}: $pc-pixel*1px;
+		}
+	}
+
+	@else if type-of($pc-pixel)==string {
+		#{$property}: auto;
+
+		@media (min-width: $screen-xlg) {
+			#{$property}: auto;
+		}
+	}
+
+	@else if type-of($pc-pixel)==list {
+		$px: (
+		);
+	$vw: (
+	);
+
+@each $value in $pc-pixel {
+	@if type-of($value)==number {
+		$px: append($px, $value*1px);
+		$vw: append($vw, calc($value * 100 / 1920) * 1vw);
+	}
+
+	@else if type-of($value)==string {
+		$px: append($px, auto);
+		$vw: append($vw, auto);
+	}
+}
+
+#{$property}: $px;
+#{$property}: $vw;
+$px: (
+);
+
+@each $value in $pc-pixel {
+	@if type-of($value)==number {
+		$px: append($px, $value * 1px);
+	}
+
+	@else if type-of($value)==string {
+		$px: append($px, auto);
+	}
+}
+
+@media (min-width:$screen-xlg) {
+	#{$property}: $px;
+}
+}
+}
+
+@mixin vw-convert-tb($property, $tb-pixel) {
+	@if type-of($tb-pixel)==number {
+		@media (max-width: $screen-lg) {
+			#{$property}: $tb-pixel*1px;
+			#{$property}: calc($tb-pixel * 100 / 1366) * 1vw;
+		}
+	}
+
+	@else if type-of($tb-pixel)==string {
+		@media (max-width: $screen-lg) {
+			#{$property}: auto;
+		}
+	}
+
+	@else if type-of($tb-pixel)==list {
+		$px: (
+		);
+	$vw: (
+	);
+
+@each $value in $tb-pixel {
+	@if type-of($value)==number {
+		$px: append($px, $value*1px);
+		$vw: append($vw, calc($value * 100 / 1366) * 1vw)
+	}
+
+	@else if type-of($value)==string {
+		$px: append($px, auto);
+		$vw: append($vw, auto);
+	}
+}
+
+@media (max-width: $screen-lg) {
+	#{$property}: $px;
+	#{$property}: $vw;
+}
+}
+}
+
+@mixin vw-convert-mo($property, $mo-pixel) {
+	@if type-of($mo-pixel)==number {
+		#{$property}: calc($mo-pixel / 414 * 828) * 1px;
+		#{$property}: calc($mo-pixel / 414) * 1vw;
+
+		@media (max-width: 414px) {
+			#{$property}: $mo-pixel*1px;
+			#{$property}: calc($mo-pixel / 414) * 1vw;
+		}
+	}
+
+	@else if type-of($mo-pixel)==string {
+		#{$property}: auto;
+
+		@media (max-width: 414px) {
+			#{$property}: auto;
+		}
+	}
+
+	@else if type-of($mo-pixel)==list {
+		$px: (
+		);
+	$vw: (
+	);
+
+@each $value in $mo-pixel {
+	@if type-of($value)==number {
+		$px: append($px, calc($value * 100 / 414 * 828) * 1px);
+		$vw: append($vw, calc($value*100/414) * 1vw);
+	}
+
+	@else if type-of($value)==string {
+		$px: append($px, auto);
+		$vw: append($vw, auto);
+	}
+}
+
+#{$property}:$px;
+#{$property}:$vw;
+$px: (
+);
+$vw: (
+);
+
+@each $value in $mo-pixel {
+	@if type-of($value)==number {
+		$px: append($px, $value*1px);
+		$vw: append($vw, calc($value * 100 / 414) * 1vw);
+	}
+
+	@else if type-of($value)==string {
+		$px: append($px, auto);
+		$vw: append($vw, auto);
+	}
+}
+
+@media (max-width:414px) {
+	#{$property}: $px;
+	#{$property}: $vw;
+}
+}
+}

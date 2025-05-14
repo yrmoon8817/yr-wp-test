@@ -1,0 +1,124 @@
+////
+/// Functions and mixins for postcss-inline-svg
+/// @group postcss-inline-svg
+////
+
+/// Default color values, if the inline-svg() function gets no color parameter
+/// @type {color}
+$SVG-COLOR-FILL: null !default;
+$SVG-COLOR-FILL-CIRCLE: null !default;
+$SVG-COLOR-STROKE: null !default;
+
+/// Defines whether the inline-svg() function returns only the data string or the url as well
+/// @type {Boolean}
+$SVG-URL: true !default;
+
+/// Returns a URI-encoded color value (hex, rgb, or rgba)
+/// @param {color} $color - The color to encode
+/// @return {string} - URI-encoded color
+@function uri-encode-color($color) {
+	@if type-of($color) !="color" and $color !="none" {
+		@warn "Invalid color value: #{$color}. Defaulting to #000.";
+		$color: #000;
+	}
+
+	@if $color =="none" {
+		@return "none";
+	}
+
+	@else if alpha($color) !=1 {
+		@return "rgba%28"+round(red($color))+"%2C"+round(green($color))+"%2C"+round(blue($color))+"%2C"+alpha($color)+"%29";
+	}
+
+	@else {
+		@return "rgb%28"+round(red($color))+"%2C"+round(green($color))+"%2C"+round(blue($color))+"%29";
+	}
+}
+
+/// Creates an inline SVG with dynamically assigned fill, circle fill, and stroke colors
+/// @param {string} $icon - Path to the SVG file (relative to Webpack's postcss-inline-svg paths)
+/// @param {color} $fillcolor - Color for fill attributes (defaults to $SVG-COLOR-FILL)
+/// @param {color} $circlefillcolor - Color for circle fill attributes (defaults to $SVG-COLOR-FILL-CIRCLE)
+/// @param {color} $strokecolor - Color for stroke attributes (defaults to $SVG-COLOR-STROKE)
+/// @param {boolean} $url - Whether to wrap the result in url() (defaults to $SVG-URL)
+/// @return {string} - URI-encoded SVG for use as a background-image
+@function inline-svg($icon,
+	$fillcolor: $SVG-COLOR-FILL,
+	$circlefillcolor: $SVG-COLOR-FILL-CIRCLE,
+	$strokecolor: $SVG-COLOR-STROKE,
+	$url: $SVG-URL) {
+
+	// Sanity checks
+	@if type-of($icon) !="string" {
+		@warn "Invalid icon name: #{$icon}. It must be a string.";
+		@return null;
+	}
+
+	// Prepare color values
+	$fill: if($fillcolor =="none", "none", if(type-of($fillcolor)=="color", uri-encode-color($fillcolor), uri-encode-color(#000)));
+	$circlefill: if($circlefillcolor =="none", "none", if(type-of($circlefillcolor)=="color", uri-encode-color($circlefillcolor), uri-encode-color(#000)));
+	$stroke: if($strokecolor =="none", "none", if(type-of($strokecolor)=="color", uri-encode-color($strokecolor), uri-encode-color(#000)));
+
+	// Construct SVG modifications
+	$svg-modifiers: '[fill="currentColor"]{fill:#{$fill}}[fill="#000"]{fill:#{$fill}}[stroke="currentColor"]{stroke:#{$stroke}}[stroke="#000"]{stroke:#{$stroke}}circle[fill="currentColor"]{fill:#{$circlefill}}circle[fill="#000"]{fill:#{$circlefill}}';
+
+	// Use postcss-inline-svg's inline-svg() function
+	$svg-data: inline-svg($icon, $svg-modifiers);
+
+	@if $url {
+		@return url($svg-data);
+	}
+
+	@else {
+		@return $svg-data;
+	}
+}
+
+/// Returns a list of available SVG icons (manually defined)
+/// @param {string} [$folder] - Filter icons by folder (optional)
+/// @return {list} - List of icon names
+@function svg-list($folder: null) {
+	// Manually define available icons
+	$icons: (
+		"ic_arrow_back_16px"
+	);
+
+@if $folder {
+	@warn "Folder filtering not fully supported. Returning all icons.";
+}
+
+@return $icons;
+}
+
+/// Convenience mixin for creating an SVG icon with useful default values
+/// @param {string} $icon - Path to the SVG file
+/// @param {color} $fillcolor - Color for fill attributes
+/// @param {color} $circlefillcolor - Color for circle fill attributes
+/// @param {color} $strokecolor - Color for stroke attributes
+@mixin inline-svg-icon($icon,
+	$fillcolor: $SVG-COLOR-FILL,
+	$circlefillcolor: $SVG-COLOR-FILL-CIRCLE,
+	$strokecolor: $SVG-COLOR-STROKE) {
+	background-image: inline-svg($icon, $fillcolor, $circlefillcolor, $strokecolor, $url: true);
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+
+/// Mixin for creating an SVG icon with specified size and colors
+/// @param {number} $width - Width of the icon
+/// @param {number} $height - Height of the icon
+/// @param {string} $icon - Path to the SVG file
+/// @param {color} $fillcolor - Color for fill attributes
+/// @param {color} $circlefillcolor - Color for circle fill attributes
+/// @param {color} $strokecolor - Color for stroke attributes
+@mixin inline-svg-size($width,
+	$height,
+	$icon,
+	$fillcolor: $SVG-COLOR-FILL,
+	$circlefillcolor: $SVG-COLOR-FILL-CIRCLE,
+	$strokecolor: $SVG-COLOR-STROKE) {
+	@include inline-svg-icon($icon, $fillcolor, $circlefillcolor, $strokecolor);
+	width: $width;
+	height: $height;
+	background-size: $width $height;
+}

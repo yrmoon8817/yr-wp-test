@@ -1,0 +1,39 @@
+@function common-z-index($key) {
+  @if map-has-key($z-indexes, $key) {
+    @return map-get($z-indexes, $key);
+  }
+  @warn "Unknown `#{$key}` in $z-indexes.";
+}
+
+// basic color set
+@function get-color-key($map, $keys...) {
+  @each $key in $keys {
+    @if map-has-key($map, $key) {
+      $map: map-get($map, $key);
+    } @else {
+      @return null;
+    }
+  }
+  @return $map;
+}
+
+@function px-to-rem($size) {
+  @if not unitless($size) {
+    @return $size / ($size * 0 + 1) * 0.1rem;
+  }
+  @else {
+    @return $size * 0.1rem;
+  }
+}
+
+@function px-to-vw($size) {
+  $defaultMobileWidth: 360;
+  @if not unitless($size) {
+    $unitless-size: ($size / ($size * 0 + 1));
+    $convert-vw: ($unitless-size / (360 / 100));
+    @return $convert-vw+vw;
+  }
+  @else {
+    @return ($size / (360 / 100))+vw;
+  }
+}

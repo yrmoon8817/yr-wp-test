@@ -1,0 +1,471 @@
+/*!********************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/css/scss/project.scss ***!
+  \********************************************************************************************************************/
+@charset "UTF-8";
+/* flex containers에 적용 */
+/* flex items에 적용 */
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+table,
+th,
+td,
+form,
+fieldset,
+legend,
+textarea,
+input,
+select,
+textarea,
+button,
+article,
+aside,
+dialog,
+footer,
+header,
+section,
+footer,
+nav,
+figure,
+main {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+article,
+aside,
+dialog,
+footer,
+header,
+section,
+footer,
+nav,
+figure,
+main {
+  display: block;
+}
+
+html,
+body {
+  height: 100%;
+  -webkit-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  font-size: 0.625rem;
+}
+
+img,
+form,
+fieldset,
+svg,
+li {
+  border: 0;
+  vertical-align: top;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button {
+  overflow: visible;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+button::-moz-focus-inner {
+  padding: 0;
+  margin: -1px;
+}
+
+input,
+button,
+select,
+textarea {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: transparent;
+}
+
+address,
+caption,
+em {
+  font-style: normal;
+}
+
+a {
+  text-decoration: none;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* z-index */
+.theme_genesis {
+  /* dark theme */
+  --primary-custom: rgba(44,44,46, 1);
+  --surface-container-custom: rgba(44, 44, 46, 1);
+  --surface-container-highest-custom: rgba(81, 81, 84, 1);
+  --surface-container-ultimate-custom: rgba(54, 54, 56, 1);
+  --surface-container-explorer-custom: rgba(44, 44, 46, 1);
+  --opacity-explorer-custom: rgba(255, 255, 255, 0.1);
+  --surface-custom: rgba(17, 17, 17, 1);
+  --badge-container: rgba(105, 73, 65, 1);
+  --badge-on-container: rgba(228, 206, 200, 1);
+  --badge-container-yellow: rgba(214, 159, 62, 1);
+  --badge-on-container-yellow: rgba(246, 237, 221, 1);
+  --badge-container-blue: rgba(46, 85, 104, 1);
+  --badge-on-container-blue: rgba(101, 177, 201, 1);
+  --badge-event: rgba(195,111,81, 1);
+  --primary-fixed: rgba(17, 17, 17, 1);
+  --primary-fixed-ultimate: rgba(44, 44, 46, 1);
+  --primary-fixed-highest: rgba(54, 54, 56, 1);
+  --primary-fixed-high: rgba(81, 81, 84, 1);
+  --primary-fixed-mid: rgba(102, 102, 107, 1);
+  --primary-fixed-low: rgba(154, 154, 159, 1);
+  --black-fixed: rgba(17, 17, 17, 1);
+  --black-fixed-ultimate: rgba(44, 44, 46, 1);
+  --black-fixed-highest: rgba(54, 54, 56, 1);
+  --black-fixed-high: rgba(81, 81, 84, 1);
+  --black-fixed-mid: rgba(102, 102, 107, 1);
+  --black-fixed-low: rgba(154, 154, 159, 1);
+  --secondary-fixed: rgba(195,111,81, 1);
+  --secondary-fixed-low: rgba(123, 82, 72, 1);
+  --secondary-fixed-lowest: rgba(228, 206, 200, 1);
+  --white-fixed: rgba(255, 255, 255, 1);
+  --white-fixed-lowest: rgba(241, 241, 243, 1);
+  --outline: rgba(255, 255, 255, 1);
+  --outline-high: rgba(81, 81, 84, 1);
+  --outline-highest: rgba(54, 54, 56, 1);
+  --outline-low: rgba(154, 154, 159, 1);
+  --outline-lowest: rgba(182, 182, 187, 1);
+  --outline-mid: rgba(102, 102, 107, 1);
+  --outline-ultimate: rgba(44, 44, 46, 1);
+  --on-primary: rgba(17, 17, 17, 1);
+  --on-primary-high: rgba(128, 128, 128, 1);
+  --on-primary-highest: rgba(81, 81, 84, 1);
+  --on-primary-low: rgba(226, 226, 229, 1);
+  --on-primary-lowest: rgba(255, 255, 255, 1);
+  --on-primary-mid: rgba(182, 182, 187, 1);
+  --on-primary-ultimate: rgba(54, 54, 56, 1);
+  --primary: rgba(255, 255, 255, 1);
+  --primary-high: rgba(128, 128, 134, 1);
+  --primary-highest: rgba(81, 81, 84, 1);
+  --primary-low: rgba(226, 226, 229, 1);
+  --primary-lowest: rgba(241, 241, 243, 1);
+  --primary-mid: rgba(182, 182, 187, 1);
+  --primary-ultimate: rgba(44, 44, 46, 1);
+  --on-quaternary: rgba(255, 255, 255, 1);
+  --on-quaternary-ultimate: rgba(17, 17, 17, 1);
+  --quaternary: rgba(233, 60, 60, 1);
+  --quaternary-high: rgba(140, 0, 25, 1);
+  --quaternary-highest: rgba(94, 0, 16, 1);
+  --quaternary-low: rgba(233, 60, 60, 1);
+  --quaternary-lowest: rgba(254, 233, 236, 1);
+  --quaternary-mid: rgba(187, 0, 33, 1);
+  --quaternary-ultimate: rgba(62, 0, 10, 1);
+  --on-secondary: rgba(255, 255, 255, 1);
+  --on-secondary-ultimate: rgba(17, 17, 17, 1);
+  --secondary: rgba(155,96,75, 1);
+  --secondary-high: rgba(143, 97, 85, 1);
+  --secondary-highest: rgba(123, 82, 72, 1);
+  --secondary-low: rgba(216, 184, 176, 1);
+  --secondary-lowest: rgba(229, 205, 197, 1);
+  --secondary-mid: rgba(172, 125, 113, 1);
+  --secondary-ultimate: rgba(75, 47, 41, 1);
+  --blue-custom: rgba(79, 151, 218, 1);
+  --blue-grey-custom: rgba(133, 153, 172, 1);
+  --on-surface: rgba(255, 255, 255, 1);
+  --on-surface-high: rgba(154, 154, 159, 1);
+  --on-surface-highest: rgba(81, 81, 84, 1);
+  --on-surface-low: rgba(226, 226, 229, 1);
+  --on-surface-lowest: rgba(241, 241, 243, 1);
+  --on-surface-mid: rgba(182, 182, 187, 1);
+  --on-surface-ultimate: rgba(17, 17, 17, 1);
+  --surface: rgba(17, 17, 17, 1);
+  --surface-high: rgba(154, 154, 159, 1);
+  --surface-highest: rgba(81, 81, 84, 1);
+  --surface-low: rgba(226, 226, 229, 1);
+  --surface-lowest: rgba(241, 241, 243, 1);
+  --surface-mid: rgba(182, 182, 187, 1);
+  --surface-ultimate: rgba(31, 31, 31, 1);
+  --on-surface-container: rgba(255, 255, 255, 1);
+  --on-surface-container-high: rgba(102, 102, 107, 1);
+  --on-surface-container-highest: rgba(81, 81, 84, 1);
+  --on-surface-container-low: rgba(182, 182, 187, 1);
+  --on-surface-container-lowest: rgba(226, 226, 229, 1);
+  --on-surface-container-mid: rgba(154, 154, 159, 1);
+  --on-surface-container-ultimate: rgba(17, 17, 17, 1);
+  --surface-container: rgba(44, 44, 46, 1);
+  --surface-container-high: rgba(102, 102, 107, 1);
+  --surface-container-highest: rgba(76, 76, 76, 1);
+  --surface-container-low: rgba(182, 182, 187, 1);
+  --surface-container-lowest: rgba(226, 226, 229, 1);
+  --surface-container-mid: rgba(154, 154, 159, 1);
+  --surface-container-ultimate: rgba(54, 54, 56, 1);
+  --on-tertiary: rgba(255, 255, 255, 1);
+  --on-tertiary-ultimate: rgba(17, 17, 17, 1);
+  --tertiary: rgba(235, 149, 0, 1);
+  --tertiary-ultimate: rgba(235, 149, 0, 1);
+  --ccs-on-primary: rgba(17, 17, 17, 1);
+  --ccs-ultimate: rgba(44, 44, 46, 1);
+  --ccs-highest: rgba(54, 54, 56, 1);
+  --ccs-high: rgba(81, 81, 84, 1);
+  --control-ultimate: rgba(9, 59, 69, 1);
+  --control-highest: rgba(22, 79, 91, 1);
+  --control-high: rgba(27, 91, 104, 1);
+  --control-mid: rgba(33, 104, 119, 1);
+  --control-low: rgba(44, 126, 144, 1);
+  --control-fixed: rgba(18, 116, 136, 1);
+  --control-dim: rgba(71, 130, 142, 1);
+  --concierge-normal: rgba(23, 36, 48, 1);
+  --concierge-pressed: rgba(29, 45, 60, 1);
+  --concierge-disabled: rgba(17, 30, 42, 1);
+  --charge-bar-bg: rgba(48, 60, 71, 1);
+  --control-bar: rgba(255, 255, 255, 0.1);
+  --explorer-search: rgba(73, 85, 95, 1);
+  --explorer-tooltip-high: rgba(48, 60, 71, 0.9);
+  --explorer-tooltip-mid: rgba(73, 85, 95, 0.9);
+  --explorer-compass: rgba(255, 255, 255, 1);
+  --explorer-oval: rgba(21, 104, 104, 1);
+  --outline-ev-green: rgba(109, 219, 186, 1);
+  --outline-ev-yellow: rgba(249, 195, 45, 1);
+  --outline-ev-red: rgba(246, 98, 108, 1);
+  --outline-ev-gray: rgba(120, 118, 118, 1);
+  --outline-control-lowest: rgba(38, 163, 141, 1);
+  --outline-secondary-high: rgba(112, 192, 56, 1);
+  --outline-on-surface-container-mid: rgba(149, 155, 163, 1);
+  --state-red-custom: rgba(182, 58, 58, 1);
+  --state-orange-custom: rgba(237, 133, 21, 1);
+  --state-green-custom: rgba(17, 179, 121, 1);
+  --state-neutral-custom: rgba(90, 107, 122, 1);
+  --state-blue-custom: rgba(51, 102, 255, 1);
+  --ev-green: rgba(12, 196, 196, 1);
+  --ev-yellow: rgba(251, 166, 0, 1);
+  --ev-red: rgba(218, 72, 82, 1);
+  --ev-gray: rgba(102, 102, 102, 1);
+  --parking-general: rgba(113, 113, 113, 1);
+  --parking-woman: rgba(142, 70, 87, 1);
+  --parking-disabled: rgba(56, 101, 125, 1);
+  --parking-ev: rgba(41, 84, 62, 1);
+  --parking-light: rgba(92, 78, 61, 1);
+  --parking-senior: rgba(124, 92, 22, 1);
+  --parking-bus: rgba(143, 85, 71, 1);
+  --parking-pregnant: rgba(125, 72, 133, 1);
+  --parking-family: rgba(84, 65, 136, 1);
+  --parking-eco: rgba(73, 82, 55, 1);
+  --opacity-white-20: rgba(255, 255, 255, 0.2);
+  --opacity-white-40: rgba(255, 255, 255, 0.4);
+  --opacity-white-60: rgba(255, 255, 255, 0.6);
+  --opacity-white-80: rgba(255, 255, 255, 0.8);
+  --opacity-black-20: rgba(0, 0, 0, 0.2);
+  --opacity-black-40: rgba(0, 0, 0, 0.4);
+  --opacity-black-60: rgba(0, 0, 0, 0.6);
+  --opacity-black-80: rgba(0, 0, 0, 0.8);
+  --skeleton-dark: linear-gradient(90deg, #4C4C4C 0%, #1F1F1F 15%, #1F1F1F 35%, #4C4C4C 50%, #1F1F1F 65%, #1F1F1F 85%, #4C4C4C 100%);
+  --concierge-01-dark: linear-gradient(135deg, #6AA59F 0%, #254B82 100%);
+  --concierge-02-dark: linear-gradient(315deg, #6B91B3 0%, #6B91B2 0.01%, #2757C9 100%, #2C3E67 100%);
+  --concierge-03-dark: linear-gradient(135deg, #CDA748 0%, #6F4E26 100%);
+  --concierge-04-dark: linear-gradient(135deg, #67A03F 0%, #386E11 100%);
+  --concierge-05-dark: linear-gradient(315deg, #656D74 0%, #444F58 100%);
+  --concierge-06-dark: linear-gradient(135deg, #C36A65 0%, #813130 100%);
+  --ev-charge: linear-gradient(90deg, #AF6249 0%, #CF7D63 100%);
+  --ev-conditioning: linear-gradient(90deg, #77B239 0%, #FFC700 52.08%, #F28C1F 100%);
+  --gage-time: conic-gradient(from 180deg at 50% 50%, #984125 -41.25deg, #BA8575 129.37deg, #984125 318.75deg, #BA8575 489.38deg);
+  --gage-temperature: linear-gradient(90deg, #3366FF 0%, #EA0029 100%);
+  --built-in-cam-connect: linear-gradient(270deg, #208BEE 0%, #45D7E0 100%);
+  --handle-layer: linear-gradient(180deg, #468F13 72.92%, #427E2B 100%);
+  --marker-direction: linear-gradient(0deg, rgba(95, 169, 30, 0.2) 0%, rgba(95, 169, 30, 0) 90.62%);
+  --handle-layer-bottom: linear-gradient(180deg, #172430 0%, #0E1E29 100%, #0E1E29 100%);
+  --media-normal-dark: linear-gradient(135deg, #182531 0%, #2B3946 100%);
+  --media-pressed-dark: linear-gradient(135deg, #364451 0%, #202F3C 100%);
+  --widget-bg: linear-gradient(180deg, #091724 0%, #202E3A 100%);
+}
+.theme_genesis.light {
+  /* light theme */
+  --primary-custom: rgba(17,17,17, 1);
+  --surface-custom: rgba(255, 255, 255, 1);
+  --surface-container-custom: rgba(246, 246, 248, 1);
+  --surface-container-highest-custom: rgba(17, 17, 17, 1);
+  --surface-container-ultimate-custom: rgba(44, 44, 46, 1);
+  --surface-container-explorer-custom: rgba(245, 246, 247, 1);
+  --badge-container: rgba(246, 240, 239, 1);
+  --badge-on-container: rgba(158, 112, 97, 1);
+  --badge-container-yellow: rgba(249, 242, 230, 1);
+  --badge-on-container-yellow: rgba(235, 149, 0, 1);
+  --badge-container-blue: rgba(232, 244, 250, 1);
+  --badge-on-container-blue: rgba(50, 147, 191, 1);
+  --badge-event: rgba(175, 98, 73, 1);
+  --opacity-explorer-custom: rgba(0, 0, 0, 0.05);
+  --outline: rgba(17, 17, 17, 1);
+  --outline-high: rgba(218, 218, 221, 1);
+  --outline-highest: rgba(226, 226, 229, 1);
+  --outline-low: rgba(102, 102, 107, 1);
+  --outline-lowest: rgba(54, 54, 56, 1);
+  --outline-mid: rgba(154, 154, 159, 1);
+  --outline-ultimate: rgba(241, 241, 243, 1);
+  --on-primary: rgba(255, 255, 255, 1);
+  --on-primary-high: rgba(128, 128, 134, 1);
+  --on-primary-highest: rgba(226, 226, 229, 1);
+  --on-primary-low: rgba(54, 54, 56, 1);
+  --on-primary-lowest: rgba(17, 17, 17, 1);
+  --on-primary-mid: rgba(102, 102, 107, 1);
+  --on-primary-ultimate: rgba(241, 241, 243, 1);
+  --primary: rgba(17, 17, 17, 1);
+  --primary-high: rgba(128, 128, 134, 1);
+  --primary-highest: rgba(226, 226, 229, 1);
+  --primary-low: rgba(54, 54, 56, 1);
+  --primary-lowest: rgba(44, 44, 46, 1);
+  --primary-mid: rgba(102, 102, 107, 1);
+  --primary-ultimate: rgba(241, 241, 243, 1);
+  --on-quaternary: rgba(255, 255, 255, 1);
+  --quaternary: rgba(233, 60, 60, 1);
+  --quaternary-high: rgba(140, 0, 25, 1);
+  --quaternary-highest: rgba(94, 0, 16, 1);
+  --quaternary-low: rgba(233, 60, 60, 1);
+  --quaternary-lowest: rgba(254, 233, 236, 1);
+  --quaternary-mid: rgba(187, 0, 33, 1);
+  --quaternary-ultimate: rgba(62, 0, 10, 1);
+  --on-secondary: rgba(255, 255, 255, 1);
+  --on-secondary-ultimate: rgba(17, 17, 17, 1);
+  --secondary: rgba(175, 98, 73, 1);
+  --secondary-high: rgba(175, 98, 73, 1);
+  --secondary-fixed: rgba(195, 111, 81, 1);
+  --secondary-highest: rgba(182, 110, 87, 1);
+  --secondary-low: rgba(152, 77, 53, 1);
+  --secondary-lowest: rgba(115, 58, 39, 1);
+  --secondary-mid: rgba(167, 88, 62, 1);
+  --secondary-ultimate: rgba(195, 143, 127, 1);
+  --on-surface: rgba(17, 17, 17, 1);
+  --on-surface-high: rgba(128, 128, 134, 1);
+  --on-surface-highest: rgba(182, 182, 187, 1);
+  --on-surface-low: rgba(54, 54, 56, 1);
+  --on-surface-lowest: rgba(44, 44, 46, 1);
+  --on-surface-mid: rgba(81, 81, 84, 1);
+  --on-surface-ultimate: rgba(255, 255, 255, 1);
+  --surface: rgba(255, 255, 255, 1);
+  --surface-high: rgba(154, 154, 159, 1);
+  --surface-highest: rgba(226, 226, 229, 1);
+  --surface-low: rgba(54, 54, 56, 1);
+  --surface-lowest: rgba(44, 44, 46, 1);
+  --surface-mid: rgba(102, 102, 107, 1);
+  --surface-ultimate: rgba(241, 241, 243, 1);
+  --on-surface-container: rgba(17, 17, 17, 1);
+  --on-surface-container-high: rgba(182, 182, 187, 1);
+  --on-surface-container-highest: rgba(207, 207, 210, 1);
+  --on-surface-container-low: rgba(81, 81, 84, 1);
+  --on-surface-container-lowest: rgba(44, 44, 46, 1);
+  --on-surface-container-mid: rgba(128, 128, 134, 1);
+  --on-surface-container-ultimate: rgba(255, 255, 255, 1);
+  --surface-container: rgba(255, 255, 255, 1);
+  --surface-container-high: rgba(182, 182, 187, 1);
+  --surface-container-highest: rgba(207, 207, 210, 1);
+  --surface-container-low: rgba(54, 54, 56, 1);
+  --surface-container-lowest: rgba(44, 44, 46, 1);
+  --surface-container-mid: rgba(128, 128, 134, 1);
+  --surface-container-ultimate: rgba(242, 242, 242, 1);
+  --on-tertiary: rgba(255, 255, 255, 1);
+  --on-tertiary-ultimate: rgba(17, 17, 17, 1);
+  --tertiary: rgba(235, 149, 0, 1);
+  --tertiary-ultimate: rgba(235, 149, 0, 1);
+  --ccs-on-primary: rgba(250, 250, 250, 1);
+  --ccs-ultimate: rgba(243, 243, 243, 1);
+  --ccs-highest: rgba(224, 224, 224, 1);
+  --ccs-high: rgba(210, 210, 210, 1);
+  --control-ultimate: rgba(220, 139, 113, 1);
+  --control-highest: rgba(175, 98, 73, 1);
+  --control-high: rgba(166, 86, 60, 1);
+  --control-mid: rgba(159, 77, 51, 1);
+  --control-low: rgba(144, 65, 39, 1);
+  --control-fixed: rgba(175, 98, 73, 1);
+  --control-dim: rgba(211, 151, 131, 1);
+  --concierge-normal: rgba(247, 247, 247, 1);
+  --concierge-pressed: rgba(241, 241, 241, 1);
+  --concierge-disabled: rgba(243, 245, 248, 1);
+  --charge-bar-bg: rgba(241, 241, 241, 1);
+  --control-bar: rgba(0, 0, 0, 0.1);
+  --explorer-search: rgba(255, 255, 255, 1);
+  --explorer-tooltip-high: rgba(48, 60, 71, 0.8);
+  --explorer-tooltip-mid: rgba(98, 98, 98, 0.8);
+  --explorer-compass: rgba(204, 208, 211, 1);
+  --explorer-oval: rgba(138, 211, 198, 1);
+  --outline-ev-green: rgba(72, 170, 141, 1);
+  --outline-ev-yellow:rgba(209, 156, 9, 1);
+  --outline-ev-red: rgba(201, 35, 46, 1);
+  --outline-ev-gray: rgba(75, 75, 75, 1);
+  --outline-control-lowest: rgba(20, 143, 121, 1);
+  --outline-secondary-high: rgba(89, 169, 34, 1);
+  --outline-on-surface-container-mid: rgba(69, 76, 83, 1);
+  --state-red-custom: rgba(232, 55, 55, 1);
+  --state-orange-custom: rgba(255, 140, 16, 1);
+  --state-green-custom: rgba(17, 194, 131, 1);
+  --state-neutral-custom: rgba(157, 173, 187, 1);
+  --state-blue-custom: rgba(51, 102, 255, 1);
+  --ev-green: rgba(12, 196, 196, 1);
+  --ev-yellow: rgba(251, 166, 0, 1);
+  --ev-red: rgba(218, 72, 82, 1);
+  --ev-gray: rgba(102, 102, 102, 1);
+  --parking-general: rgba(225, 225, 225, 1);
+  --parking-woman: rgba(255, 212, 233, 1);
+  --parking-disabled: rgba(206, 238, 255, 1);
+  --parking-ev: rgba(198, 248, 223, 1);
+  --parking-light: rgba(240, 226, 204, 1);
+  --parking-senior: rgba(255, 234, 189, 1);
+  --parking-bus: rgba(255, 216, 206, 1);
+  --parking-pregnant: rgba(250, 217, 255, 1);
+  --parking-family: rgba(232, 217, 255, 1);
+  --parking-eco: rgba(225, 237, 198, 1);
+  --skeleton-dark: linear-gradient(90deg, #F2F2F2 0%, #E5E5E5 15%, #E5E5E5 35%, #F2F2F2 50%, #E5E5E5 65%, #E5E5E5 85%, #F2F2F2 100%);
+  --concierge-01-light: linear-gradient(135deg, #85E1D7 0%, #2B5A9D 100%);
+  --concierge-02-light: linear-gradient(135deg, #9EBEDA 0%, #183A89 100%);
+  --concierge-03-light: linear-gradient(315deg, #B0660E 0%, #F9C43E 100%);
+  --concierge-04-light: linear-gradient(135deg, #5EC716 0%, #3C8B06 100%);
+  --concierge-05-light: linear-gradient(135deg, #8895A0 0%, #44515C 100%);
+  --concierge-06-light: linear-gradient(135deg, #EA7B74 0%, #B41717 100%);
+  --ev-charge: linear-gradient(90deg, #AF6249 0%, #CF7D63 100%);
+  --ev-conditioning: linear-gradient(90deg, #77B239 0%, #FFC700 52.08%, #F28C1F 100%);
+  --gage-time: conic-gradient(from 180deg at 50% 50%, #984125 -41.25deg, #BA8575 129.37deg, #984125 318.75deg, #BA8575 489.38deg);
+  --gage-temperature: linear-gradient(90deg, #3366FF 0%, #EA0029 100%);
+  --built-in-cam-connect: linear-gradient(270deg, #208BEE 0%, #45D7E0 100%);
+  --handle-layer: linear-gradient(180deg, #468F13 72.92%, #427E2B 100%);
+  --marker-direction: linear-gradient(0deg, rgba(95, 169, 30, 0.2) 0%, rgba(95, 169, 30, 0) 90.62%);
+  --handle-layer-bottom: linear-gradient(180deg, #172430 0%, #0E1E29 100%, #0E1E29 100%);
+  --media-normal-light: linear-gradient(135deg, #E9EBEC 0%, #FDFDFD 100%);
+  --media-pressed-light: linear-gradient(135deg, #FDFDFD 0%, #E3E4E4 100%);
+  --widget-bg: linear-gradient(180deg, #091724 0%, #202E3A 100%);
+  /* 전달 누락 영역 임의 추가 */
+  --primary-ultimate-fixed:rgba(48, 60, 71, 1);
+}
+
+.content {
+  background: #ddd;
+}
