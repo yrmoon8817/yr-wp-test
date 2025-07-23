@@ -1,13 +1,16 @@
-<!DOCTYPE html><html lang="ko"><head>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="format-detection" content="telephone=no">
-	
-	<title>테마1 : 페이지1</title>
-<script defer="" src="../../main.js"></script></head>
+	<meta name="list" content="컨텐츠내용설명">
+	<title>타이틀</title>
+</head>
 <body data-pagestatus="new : 2024.08.01" class="content">
+    <%- require('./include/list.ejs')({count:3, array:['1','2','3']}) %>
     <p>테스트????!!!!</p>
     <span class="ic_apple_24px"></span>
-
-</body></html>
+</body>
+</html>

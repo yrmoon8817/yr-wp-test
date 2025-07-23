@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>Webpack Template : 마크업 산출물</title>
+<title><%= project.projectName %> : 마크업 산출물</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 *{margin:0;padding:0;font-family: "Noto Sans KR", sans-serif;}
@@ -59,10 +59,10 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
  .new, .update {margin-left:5px !important;}
 }
 </style>
-<script defer src="main.js"></script></head>
+</head>
 <body>
 	<header class="index-header">
-		<h1 class="index-title">Webpack Template : 마크업 산출물 <button type="button" class="preview_btn">Preview</button></h1>
+		<h1 class="index-title"><%= project.projectName %> : 마크업 산출물 <button type="button" class="preview_btn">Preview</button></h1>
 		
 		<ul class="index-search">
 			<li class="index-search-menu">
@@ -82,90 +82,82 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 	</header>
 	<section class="index-section-category" id="cate-top">
 		<h2 class="index-title">카테고리 바로가기</h2>
-		
-		<h3 class="sub-title cate">폴더1</h3>
+		<%
+		var list = metaList || [];
+		var cateArr = [];
+		 for( let f=0; f< list.length; f+=1) {%>
+		<h3 class="sub-title cate"><%=list[f][0].theme%></h3>
 		<ul class="index-category-list">
-		
-				<li class="index-cate-item"><a href="#tab0-1">category title1</a></li>
-			
-			
-				<li class="index-cate-item"><a href="#tab0-2">category title2</a></li>
-			
-			
+		<%
+		var titleArr = [];
+		var count = 0;
+		var check=false;
+		for( let x=1; x< list[f].length; x+=1) {
+			if(titleArr){
+				titleArr.forEach((item,index)=>{
+					if(titleArr[index]==info2.files[f][x].listTitle.split(' : ')[1]){
+						count++;
+					}
+					if(index === titleArr.length-1){
+						if(count>0){
+							check=false
+						} else {
+							check=true
+						}
+						count=0;
+						return check;
+					}
+				})
+			}
+			if(check || titleArr.length===0){ titleArr.push(info2.files[f][x].listTitle.split(' : ')[1]) %>
+				<li class="index-cate-item"><a href="#tab<%=`${f}-${x}`%>"><%=info2.files[f][x].listTitle.split(' : ')[1]%></a></li>
+			<%}%>
+			<%}%>
 		</ul>	
-		
-		<h3 class="sub-title cate">폴더2</h3>
-		<ul class="index-category-list">
-		
-				<li class="index-cate-item"><a href="#tab1-1">category title2</a></li>
-			
-			
-		</ul>	
-		
-		<h3 class="sub-title cate">폴더3</h3>
-		<ul class="index-category-list">
-		
-				<li class="index-cate-item"><a href="#tab2-1">category title3</a></li>
-			
-			
-				<li class="index-cate-item"><a href="#tab2-2">category title4</a></li>
-			
-			
-		</ul>	
-		
+		<%}%>
 	</section>
 	<section class="index-section-info">
 		<span class="label-date new"></span> NEW <span class="label-date update"></span> UPDATE
 	</section>
-		
+		<%
+		var list = metaList;
+		var cateArr = [];
+		 for( let g=0; g < list.length; g+=1) {%>
 	<section class="section-list">
-				<h2 id="tab_doc" class="index-title">폴더1</h2>
-					
-				 <h3 id="tab0-1" class="sec_h sub-title">category title1</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/폴더1/00_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/폴더1/00_01_page1.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li></ul>	
-				 <h3 id="tab0-2" class="sec_h sub-title">category title2</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/폴더1/00_02_page2.html"><span class="index-link-title">document title</span><span class="filename">views/폴더1/00_02_page2.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li>
+				<h2 id="tab_doc" class="index-title"><%=list[g][0].theme%></h2>
+				<%
+				var titleArr = [];
+				var count = 0;
+				var check=false;
+				for( let w=1; w< list[g].length; w+=1){
+					if(titleArr){
+						titleArr.forEach((item,index)=>{
+							if(titleArr[index]==info2.files[g][w].listTitle.split(' : ')[1]){
+								count++;
+							}
+							if(index === titleArr.length-1){
+								if(count>0){
+									check=false
+								} else {
+									check=true
+								}
+								count=0;
+								return check;
+							}
+						})
+					}
+				if(check || titleArr.length===0){ if(titleArr.length!==0){%></ul><%} titleArr.push(info2.files[g][w].listTitle.split(' : ')[1]) %>	
+				 <h3 id="tab<%=`${g}-${w}`%>" class="sec_h sub-title"><%=info2.files[g][w].listTitle.split(' : ')[1]%></h3><ul class="list-box">
+				<%}%>
+					<li class="index-section-item"><a class="index-link" href="views/<%=list[g][0].theme%>/<%= list[g][w].name %>"><span class="index-link-title"><%=info2.files[g][w].listTitle.split(' : ')[0]%></span><span class="filename">views/<%=list[g][0].theme%>/<%= list[g][w].name %></span></a><% if (list[g][w].splitStatus) { %>
+						<span class="label-date <%= list[g][w].splitStatus %>"><%= list[g][w].splitStatusDate %></span>
+						<%}%></li><%}%>
 						</ul>
 		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
 	</section>
-	
-	<section class="section-list">
-				<h2 id="tab_doc" class="index-title">폴더2</h2>
-					
-				 <h3 id="tab1-1" class="sec_h sub-title">category title2</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/폴더2/01_page3.html"><span class="index-link-title">document title</span><span class="filename">views/폴더2/01_page3.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li>
-						</ul>
-		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
-	</section>
-	
-	<section class="section-list">
-				<h2 id="tab_doc" class="index-title">폴더3</h2>
-					
-				 <h3 id="tab2-1" class="sec_h sub-title">category title3</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/폴더3/01_page4.html"><span class="index-link-title">document title</span><span class="filename">views/폴더3/01_page4.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li></ul>	
-				 <h3 id="tab2-2" class="sec_h sub-title">category title4</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/폴더3/02_page5.html"><span class="index-link-title">document title</span><span class="filename">views/폴더3/02_page5.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li>
-						</ul>
-		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
-	</section>
-	
+	<%}%>
 	<footer class="index-footer">
-		<p class="index-info"><strong>Hivelab</strong> / IUI / Author</p>
+		<p class="index-info"><strong>Hivelab</strong> / <%= project.projectOrg %> / <%= project.projectAuthor %></p>
 	</footer>
 <script>
 	// Preview 기능
