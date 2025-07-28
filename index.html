@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>webpack template : 마크업 산출물</title>
+<title><%= project.projectName %> : 마크업 산출물</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 *{margin:0;padding:0;font-family: "Noto Sans KR", sans-serif;}
@@ -58,10 +58,10 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
  .new, .update {margin-left:5px !important;}
 }
 </style>
-<script defer src="bundle.js"></script></head>
+</head>
 <body>
 	<header class="index-header">
-		<h1 class="index-title">webpack template : 마크업 산출물 <button type="button" class="preview_btn">Preview</button></h1>
+		<h1 class="index-title"><%= project.projectName %> : 마크업 산출물 <button type="button" class="preview_btn">Preview</button></h1>
 		
 		<ul class="index-search">
 			<li class="index-search-menu">
@@ -81,210 +81,82 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 	</header>
 	<section class="index-section-category" id="cate-top">
 		<h2 class="index-title">카테고리 바로가기</h2>
-		
-		<h3 class="sub-title cate">Directory1</h3>
+		<%
+		var list = info2.files || [];
+		var cateArr = [];
+		 for( let f=0; f< list.length; f+=1) {%>
+		<h3 class="sub-title cate"><%=list[f][0].theme%></h3>
 		<ul class="index-category-list">
-		
-				<li class="index-cate-item"><a href="#tab0-1">category title1</a></li>
-			
-			
-				<li class="index-cate-item"><a href="#tab0-2">category title2</a></li>
-			
-			
-			
-				<li class="index-cate-item"><a href="#tab0-4">category title3</a></li>
-			
-			
+		<%
+		var titleArr = [];
+		var count = 0;
+		var check=false;
+		for( let x=1; x< list[f].length; x+=1) {
+			if(titleArr){
+				titleArr.forEach((item,index)=>{
+					if(titleArr[index]==info2.files[f][x].listTitle.split(' : ')[1]){
+						count++;
+					}
+					if(index === titleArr.length-1){
+						if(count>0){
+							check=false
+						} else {
+							check=true
+						}
+						count=0;
+						return check;
+					}
+				})
+			}
+			if(check || titleArr.length===0){ titleArr.push(info2.files[f][x].listTitle.split(' : ')[1]) %>
+				<li class="index-cate-item"><a href="#tab<%=`${f}-${x}`%>"><%=info2.files[f][x].listTitle.split(' : ')[1]%></a></li>
+			<%}%>
+			<%}%>
 		</ul>	
-		
-		<h3 class="sub-title cate">Directory2</h3>
-		<ul class="index-category-list">
-		
-				<li class="index-cate-item"><a href="#tab1-1">category title1</a></li>
-			
-			
-				<li class="index-cate-item"><a href="#tab1-2">category title2</a></li>
-			
-			
-			
-				<li class="index-cate-item"><a href="#tab1-4">category title3</a></li>
-			
-			
-				<li class="index-cate-item"><a href="#tab1-5">category title5</a></li>
-			
-			
-		</ul>	
-		
-		<h3 class="sub-title cate">Directory3</h3>
-		<ul class="index-category-list">
-		
-				<li class="index-cate-item"><a href="#tab2-1">category title1</a></li>
-			
-			
-				<li class="index-cate-item"><a href="#tab2-2">category title2</a></li>
-			
-			
-			
-				<li class="index-cate-item"><a href="#tab2-4">category title3</a></li>
-			
-			
-				<li class="index-cate-item"><a href="#tab2-5">category title5</a></li>
-			
-			
-			
-				<li class="index-cate-item"><a href="#tab2-7">category title4</a></li>
-			
-			
-		</ul>	
-		
-		<h3 class="sub-title cate">Directory4</h3>
-		<ul class="index-category-list">
-		
-				<li class="index-cate-item"><a href="#tab3-1">category title2</a></li>
-			
-			
-				<li class="index-cate-item"><a href="#tab3-2">category title3</a></li>
-			
-			
-				<li class="index-cate-item"><a href="#tab3-3">category title5</a></li>
-			
-			
-			
-				<li class="index-cate-item"><a href="#tab3-5">category title4</a></li>
-			
-			
-		</ul>	
-		
+		<%}%>
 	</section>
 	<section class="index-section-info">
 		<span class="label-date new"></span> NEW <span class="label-date update"></span> UPDATE
 	</section>
-		
+		<%
+		var list = info2.files;
+		var cateArr = [];
+		 for( let g=0; g < list.length; g+=1) {%>
 	<section class="section-list">
-				<h2 id="tab_doc" class="index-title">Directory1</h2>
-					
-				 <h3 id="tab0-1" class="sec_h sub-title">category title1</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory1/00_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/Directory1/00_01_page1.html</span></a>
-						<span class="label-date new">2025.08.05</span>
-						</li></ul>	
-				 <h3 id="tab0-2" class="sec_h sub-title">category title2</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory1/01_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/Directory1/01_01_page1.html</span></a>
-						<span class="label-date new">2025.08.01</span>
-						</li>
-					<li class="index-section-item"><a class="index-link" href="views/Directory1/01_02_page2.html"><span class="index-link-title">document title</span><span class="filename">views/Directory1/01_02_page2.html</span></a>
-						<span class="label-date new">2025.08.01</span>
-						</li></ul>	
-				 <h3 id="tab0-4" class="sec_h sub-title">category title3</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory1/03_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/Directory1/03_01_page1.html</span></a>
-						<span class="label-date new">2025.08.02</span>
-						</li>
+				<h2 id="tab_doc" class="index-title"><%=list[g][0].theme%></h2>
+				<%
+				var titleArr = [];
+				var count = 0;
+				var check=false;
+				for( let w=1; w< list[g].length; w+=1){
+					if(titleArr){
+						titleArr.forEach((item,index)=>{
+							if(titleArr[index]==info2.files[g][w].listTitle.split(' : ')[1]){
+								count++;
+							}
+							if(index === titleArr.length-1){
+								if(count>0){
+									check=false
+								} else {
+									check=true
+								}
+								count=0;
+								return check;
+							}
+						})
+					}
+				if(check || titleArr.length===0){ if(titleArr.length!==0){%></ul><%} titleArr.push(info2.files[g][w].listTitle.split(' : ')[1]) %>	
+				 <h3 id="tab<%=`${g}-${w}`%>" class="sec_h sub-title"><%=info2.files[g][w].listTitle.split(' : ')[1]%></h3><ul class="list-box">
+				<%}%>
+					<li class="index-section-item"><a class="index-link" href="views/<%=list[g][0].theme%>/<%= list[g][w].name %>"><span class="index-link-title"><%=info2.files[g][w].listTitle.split(' : ')[0]%></span><span class="filename">views/<%=list[g][0].theme%>/<%= list[g][w].name %></span></a><% if (list[g][w].splitStatus) { %>
+						<span class="label-date <%= list[g][w].splitStatus %>"><%= list[g][w].splitStatusDate %></span>
+						<%}%></li><%}%>
 						</ul>
 		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
 	</section>
-	
-	<section class="section-list">
-				<h2 id="tab_doc" class="index-title">Directory2</h2>
-					
-				 <h3 id="tab1-1" class="sec_h sub-title">category title1</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory2/00_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/Directory2/00_01_page1.html</span></a>
-						<span class="label-date new">2025.08.05</span>
-						</li></ul>	
-				 <h3 id="tab1-2" class="sec_h sub-title">category title2</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory2/01_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/Directory2/01_01_page1.html</span></a>
-						<span class="label-date new">2025.08.01</span>
-						</li>
-					<li class="index-section-item"><a class="index-link" href="views/Directory2/01_02_page2.html"><span class="index-link-title">document title</span><span class="filename">views/Directory2/01_02_page2.html</span></a>
-						<span class="label-date new">2025.08.01</span>
-						</li></ul>	
-				 <h3 id="tab1-4" class="sec_h sub-title">category title3</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory2/03_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/Directory2/03_01_page1.html</span></a>
-						<span class="label-date new">2025.08.02</span>
-						</li></ul>	
-				 <h3 id="tab1-5" class="sec_h sub-title">category title5</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory2/05_00_page3.html"><span class="index-link-title">document title</span><span class="filename">views/Directory2/05_00_page3.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li>
-						</ul>
-		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
-	</section>
-	
-	<section class="section-list">
-				<h2 id="tab_doc" class="index-title">Directory3</h2>
-					
-				 <h3 id="tab2-1" class="sec_h sub-title">category title1</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory3/00_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/Directory3/00_01_page1.html</span></a>
-						<span class="label-date new">2025.08.05</span>
-						</li></ul>	
-				 <h3 id="tab2-2" class="sec_h sub-title">category title2</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory3/01_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/Directory3/01_01_page1.html</span></a>
-						<span class="label-date new">2025.08.01</span>
-						</li>
-					<li class="index-section-item"><a class="index-link" href="views/Directory3/01_02_page2.html"><span class="index-link-title">document title</span><span class="filename">views/Directory3/01_02_page2.html</span></a>
-						<span class="label-date new">2025.08.01</span>
-						</li></ul>	
-				 <h3 id="tab2-4" class="sec_h sub-title">category title3</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory3/03_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/Directory3/03_01_page1.html</span></a>
-						<span class="label-date new">2025.08.02</span>
-						</li></ul>	
-				 <h3 id="tab2-5" class="sec_h sub-title">category title5</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory3/05_00_page3.html"><span class="index-link-title">document title</span><span class="filename">views/Directory3/05_00_page3.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li>
-					<li class="index-section-item"><a class="index-link" href="views/Directory3/07_page4.html"><span class="index-link-title">document title</span><span class="filename">views/Directory3/07_page4.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li></ul>	
-				 <h3 id="tab2-7" class="sec_h sub-title">category title4</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory3/07_page5.html"><span class="index-link-title">document title</span><span class="filename">views/Directory3/07_page5.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li>
-						</ul>
-		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
-	</section>
-	
-	<section class="section-list">
-				<h2 id="tab_doc" class="index-title">Directory4</h2>
-					
-				 <h3 id="tab3-1" class="sec_h sub-title">category title2</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory4/01_02_page2.html"><span class="index-link-title">document title</span><span class="filename">views/Directory4/01_02_page2.html</span></a>
-						<span class="label-date new">2025.08.01</span>
-						</li></ul>	
-				 <h3 id="tab3-2" class="sec_h sub-title">category title3</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory4/03_01_page1.html"><span class="index-link-title">document title</span><span class="filename">views/Directory4/03_01_page1.html</span></a>
-						<span class="label-date new">2025.08.02</span>
-						</li></ul>	
-				 <h3 id="tab3-3" class="sec_h sub-title">category title5</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory4/05_00_page3.html"><span class="index-link-title">document title</span><span class="filename">views/Directory4/05_00_page3.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li>
-					<li class="index-section-item"><a class="index-link" href="views/Directory4/07_page4.html"><span class="index-link-title">document title</span><span class="filename">views/Directory4/07_page4.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li></ul>	
-				 <h3 id="tab3-5" class="sec_h sub-title">category title4</h3><ul class="list-box">
-				
-					<li class="index-section-item"><a class="index-link" href="views/Directory4/07_page5.html"><span class="index-link-title">document title</span><span class="filename">views/Directory4/07_page5.html</span></a>
-						<span class="label-date new">2024.08.01</span>
-						</li>
-						</ul>
-		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
-	</section>
-	
+	<%}%>
 	<footer class="index-footer">
-		<p class="index-info"><strong>Hivelab</strong> / 조직명 / author name</p>
+		<p class="index-info"><strong>Hivelab</strong> / <%= project.projectOrg %> / <%= project.projectAuthor %></p>
 	</footer>
 <script>
 	// Preview 기능
