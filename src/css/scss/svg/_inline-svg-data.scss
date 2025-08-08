@@ -1,0 +1,66 @@
+// String replace function for SCSS
+@function str-replace($string, $search, $replace) {
+  $index: str-index($string, $search);
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-slice($string, $index + str-length($search));
+  }
+  @return $string;
+}
+
+// URI encode color function
+@function uri-encode-color($color) {
+  @if $color == none {
+    @return "none";
+  }
+  @if type-of($color) == color {
+    // Convert 3-digit hex to 6-digit
+    $hex: "0123456789ABCDEF";
+    $r: round(red($color));
+    $g: round(green($color));
+    $b: round(blue($color));
+    $hex-r: str-slice($hex, ($r % 16) + 1, ($r % 16) + 1) + str-slice($hex, (floor(calc($r / 16))) + 1, (floor(calc($r / 16))) + 1);
+    $hex-g: str-slice($hex, ($g % 16) + 1, ($g % 16) + 1) + str-slice($hex, (floor(calc($g / 16))) + 1, (floor(calc($g / 16))) + 1);
+    $hex-b: str-slice($hex, ($b % 16) + 1, ($b % 16) + 1) + str-slice($hex, (floor(calc($b / 16))) + 1, (floor(calc($b / 16))) + 1);
+    @if alpha($color) != 1 {
+      @return "rgba%28#{$r}%2C#{$g}%2C#{$b}%2C#{alpha($color)}%29";
+    } @else {
+      @return "%23" + $hex-r + $hex-g + $hex-b;
+    }
+  }
+  @warn "Color value '#{$color}' is not valid, defaulting to none.";
+  @return "none";
+}
+
+// Inline SVG function
+@function inline-svg($icon, $fillcolor, $circlefillcolor, $strokecolor, $url: true) {
+  $functionname: "#{$icon}";
+
+  @if function-exists($functionname) == false {
+    @warn "Function '#{$functionname}' does not exist.";
+    @return none;
+  }
+
+  $uri-string: call(get-function($functionname), $fillcolor, $circlefillcolor, $strokecolor);
+
+  @if $url {
+    @return url($uri-string);
+  } @else {
+    @return $uri-string;
+  }
+}
+
+// Inline SVG icon mixin
+@mixin inline-svg-icon($icon, $fillcolor, $circlefillcolor, $strokecolor) {
+  background-image: inline-svg($icon, $fillcolor, $circlefillcolor, $strokecolor);
+  background-repeat: no-repeat;
+}
+
+// Inline SVG size mixin
+@mixin inline-svg-size($sizew, $sizeh, $icon, $fillcolor, $circlefillcolor, $strokecolor) {
+  display: inline-block;
+  width: $sizew;
+  height: $sizeh;
+  @include inline-svg-icon($icon, $fillcolor, $circlefillcolor, $strokecolor);
+  background-size: 100% 100%;
+  vertical-align: middle;
+}

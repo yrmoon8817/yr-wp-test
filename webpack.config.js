@@ -2,7 +2,14 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const cheerio = require('cheerio');
-const fs = require('fs-extra');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ImageMinimizerPlugin=require('image-minimizer-webpack-plugin');
+const fs = require('fs');
+const gitRepoInfo =require('git-repo-info');
+const fileURLToPath  =require('url');
+const glob = require('glob');
+const crypto = require('crypto');
 
 const generateHTML = async () => {
   let projectJson = JSON.parse(await fs.promises.readFile('templates/projectInfo.json', 'utf-8'));
@@ -99,6 +106,92 @@ class CollectMetaDataPlugin {
     });
   }
 }
+class GenerateSvgScssPlugin {
+  constructor() {
+    this.cache = null; // 이전 SVG 파일 해시 저장
+  }
+
+  apply(compiler) {
+    compiler.hooks.thisCompilation.tap('GenerateSvgScssPlugin', (compilation) => {
+      compilation.hooks.processAssets.tap(
+        {
+          name: 'GenerateSvgScssPlugin',
+          stage: compilation.PROCESS_ASSETS_STAGE_ADDITIONAL,
+        },
+        () => {
+          console.log('GenerateSvgScssPlugin: Starting SVG processing...');
+          const svgDir = path.resolve(__dirname, 'src/img/inline-svg');
+          const outputPath = path.resolve(__dirname, 'src/img/inline-svg/generated-svg-functions.scss');
+          const svgFiles = require('glob').sync(`${svgDir}/*.svg`);
+
+          console.log(`Found ${svgFiles.length} SVG files:`, svgFiles);
+
+          // SVG 파일의 해시 생성
+          const fileHashes = svgFiles.map((file) => {
+            const content = fs.readFileSync(file, 'utf8');
+            return crypto.createHash('md5').update(content).digest('hex');
+          });
+          const combinedHash = crypto.createHash('md5').update(fileHashes.join('')).digest('hex');
+
+          // 캐시와 비교
+          if (this.cache === combinedHash) {
+            console.log('GenerateSvgScssPlugin: No changes in SVG files, skipping SCSS generation.');
+            return;
+          }
+
+          this.cache = combinedHash; // 캐시 업데이트
+
+          let scssOutput = '// Auto-generated SCSS functions for inline SVGs\n\n';
+
+          svgFiles.forEach((file) => {
+            console.log(`Processing SVG: ${file}`);
+            const svgContent = fs.readFileSync(file, 'utf8');
+            const $ = require('cheerio').load(svgContent, { xmlMode: true });
+            const svg = $('svg');
+            const fileName = path.basename(file, '.svg');
+            const functionName = `${fileName}`;
+
+            let svgString = svg.toString();
+            // 줄바꿈만 단일 공백으로 대체
+            svgString = svgString.replace(/\s+/g, ' ');
+            // 색상 속성을 SCSS 변수로 치환
+            svgString = svgString.replace(/fill="[^"]*"/g, `fill='#{$fillcolor}'`);
+            svgString = svgString.replace(/stroke="[^"]*"/g, `stroke='#{$strokecolor}'`);
+            svgString = svgString.replace(/<circle[^>]*fill="[^"]*"/g, (match) =>
+              match.replace(/fill="[^"]*"/, `fill='#{$circlefillcolor}'`)
+            );
+
+            // 특수문자만 URL 인코딩
+const specialChars = {
+  '<': '%3C',
+  '>': '%3E',
+  '"': '%22',
+  "'": '%27',
+  '&': '%26',
+  '#': '%23'
+};
+            let encodedSvg = svgString;
+            for (const [char, encoded] of Object.entries(specialChars)) {
+              encodedSvg = encodedSvg.replace(new RegExp(char, 'g'), encoded);
+            }
+
+            console.log(`Generated SVG string for ${fileName}:`, encodedSvg.substring(0, 100) + '...');
+
+            scssOutput += `@function ${functionName}($fillcolor, $circlefillcolor, $strokecolor) {@return \"data:image/svg+xml,${encodedSvg}\";}\n`;
+          });
+
+          console.log(`Writing SCSS to: ${outputPath}`);
+          fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+          fs.writeFileSync(outputPath, scssOutput);
+          console.log('GenerateSvgScssPlugin: SCSS file generated successfully.');
+
+          // Webpack의 감시 대상에서 generated-svg-functions.scss 제외
+          compilation.fileDependencies.delete(outputPath);
+        }
+      );
+    });
+  }
+}
 module.exports = async ()=> {
     const info = await generateHTML();
     const htmlEl = [];
@@ -123,12 +216,11 @@ module.exports = async ()=> {
       console.error('Error reading src/views:', err);
       // 빈 htmlEl 반환하여 빌드 계속 진행
     }
-  let entryPath = './src/index.js';
-  
+  let entryPath = './src/js/index.js';
+
   return {
   entry:entryPath,
-  mode:'development',
-  entry: entryPath,
+  mode:'none',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
@@ -146,8 +238,22 @@ module.exports = async ()=> {
             }
           }
         ],
+      },
+      {
+      test: /\.js$/,
+      exclude: /node_modules/, // ✅ 여기!
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env']
+        }
       }
-    ]
+    },
+    {
+      test: /\.scss$/,
+      use: ['style-loader', 'css-loader', 'sass-loader'],
+    },    
+  ]
   },
   plugins: [
     ...htmlEl.map((el) => {
@@ -174,7 +280,16 @@ module.exports = async ()=> {
       port: 8080,			//포트 3000을 사용  (이미 사용중이면 1씩 증가된 포트로 사용)
       files: ['./dist/**/*.html'], //해당 경로 내 html 파일이 자동으로 동기화 (이 부분이 없으면 html파일 변경사항은 자동 동기화 안됨)
       server: { baseDir: ['dist'] } // server의 Base 디렉토리를 dist로 지정
-    })
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'src/fonts'),
+          to: path.resolve(__dirname, 'dist/fonts'),
+        },
+      ],
+    }),
+    new GenerateSvgScssPlugin(),
   ],
   // devtool: 'cheap-eval-source-map',
   devServer: {
@@ -191,7 +306,7 @@ module.exports = async ()=> {
       devMiddleware: {
         writeToDisk: true,
       },
-      watchFiles: ['src/*', 'index.html'],
+      watchFiles: ['src/*', 'index.html','!src/img/inline-svg/generated-svg-functions.scss'],
       headers: {
         'Cache-Control': 'no-store',
       },

@@ -6,8 +6,7 @@
 ////
 
 // Import the generated inline svgs sass functions
-@import "sass-inline-svg-data";
-
+@import "../../../img/inline-svg/generated-svg-functions";
 /// default color, if the inline-svg() mixin gets no color parameter
 /// @type {color}
 $SVG-COLOR-FILL: null !default;

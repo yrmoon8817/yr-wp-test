@@ -89,11 +89,11 @@ $formats: (
 }
 
 // mixin inline svg icon
-@mixin inline-svg-size($sizew, $sizeh, $icon, $fill, $circlefill, $stroke) {
+@mixin inline-svg-size($sizew, $sizeh, $icon, $fillcolor, $circlefillcolor, $strokecolor) {
 	display: inline-block;
 	width: $sizew;
 	height: $sizeh;
-	@include inline-svg-icon($icon, $fill, $circlefill, $stroke);
+	@include inline-svg-icon($icon, $fillcolor, $circlefillcolor, $strokecolor);
 	background-size: 100% 100%;
 	vertical-align: middle;
 }
