@@ -1,0 +1,35 @@
+// Inline SVG function
+@function inline-svg($icon, $fillcolor, $circlefillcolor, $strokecolor, $url: true) {
+  $functionname: "#{$icon}";
+
+  @if function-exists($functionname)==false {
+    @warn "Function '#{$functionname}' does not exist.";
+    @return none;
+  }
+
+  $uri-string: call(get-function($functionname), $fillcolor, $circlefillcolor, $strokecolor);
+
+  @if $url {
+    @return url($uri-string);
+  }
+
+  @else {
+    @return $uri-string;
+  }
+}
+
+// Inline SVG icon mixin
+@mixin inline-svg-icon($icon, $fillcolor, $circlefillcolor, $strokecolor) {
+  background-image: inline-svg($icon, $fillcolor, $circlefillcolor, $strokecolor);
+  background-repeat: no-repeat;
+}
+
+// Inline SVG size mixin
+@mixin inline-svg-size($sizew, $sizeh, $icon, $fillcolor, $circlefillcolor, $strokecolor) {
+  display: inline-block;
+  width: $sizew;
+  height: $sizeh;
+  @include inline-svg-icon($icon, $fillcolor, $circlefillcolor, $strokecolor);
+  background-size: 100% 100%;
+  vertical-align: middle;
+}
