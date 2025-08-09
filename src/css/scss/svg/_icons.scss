@@ -1,14 +1,17 @@
-@import "./_inline-svg-data.scss";
 @import "./_inline-mixin.scss";
 
 .ic {
   &_apple_24px {
     display:inline-block;
-    @include inline-svg-size(24px, 24px, 'ic_apple_24px', #fc0,#fc0, #fc0);
+    @include inline-svg-size(24px, 24px, 'ic_apple_24px', #fc0,none, none);
   }
   &_bluetooth_24px {
     display: inline-block;
     @include inline-svg-size(24px, 24px, 'ic_bluetooth_24px', none, none, #fc0);
+  }
+  &_bullet_bold_12px {
+    display: inline-block;
+    @include inline-svg-size(12px, 12px, 'ic_bullet_bold_12px', #fc0, #fc0, #fc0);
   }
   &_cat_24px {
     display: inline-block;

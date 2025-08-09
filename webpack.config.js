@@ -118,7 +118,6 @@ class GenerateSvgScssPlugin {
   constructor() {
     this.cache = null;
   }
-
   apply(compiler) {
     compiler.hooks.beforeCompile.tapAsync('GenerateSvgScssPlugin', (params, callback) => {
       const svgDir = path.resolve(__dirname, 'src/img/inline-svg');
@@ -149,27 +148,22 @@ class GenerateSvgScssPlugin {
 
         // 1. SCSS 변수 부분을 토큰으로 교체 (변수명별로 다르게)
         svgContent = svgContent
-          .replace(/fill="#[0-9a-fA-F]{6}|none"/g, `fill='___FILLCOLOR___'`)
-          .replace(/stroke="#[0-9a-fA-F]{6}|none"/g, `stroke='___STROKECOLOR___'`)
-          .replace(/(<circle[^>]*?)fill="#[0-9a-fA-F]{6}|none"/g, `fill='___CIRCLEFILLCOLOR___'`);
-
-        // 2. 인코딩
-        let encodedSvg = encodeURIComponent(svgContent);
-
-        // 3. 토큰 복원 + 변수명 삽입 (여기서 작은 따옴표는 큰따옴표로 변환하여 오류 방지)
-        encodedSvg = encodedSvg
-          .replace(/___FILLCOLOR___/g, `#{$fillcolor}`)
-          .replace(/___STROKECOLOR___/g, `#{$strokecolor}`)
-          .replace(/___CIRCLEFILLCOLOR___/g, `#{$circlefillcolor}`);
-
-        // 4. 인코딩된 > < 사이 공백 제거
-        encodedSvg = encodedSvg.replace(/%3E%20%3C/g, '%3E%3C');
+        .replace(/<\?xml[\s\S]*?\?>\s*/i, '')
+        .replace(/<!DOCTYPE svg[\s\S]*?>\s*/i, '')
+        .replace(/<metadata>[\s\S]*?<\/metadata>\s*/i, '')
+        .replace(/[\r\n]+/g, ' ')
+        .replace(/</g, `%3C`)
+        .replace(/>/g, `%3E`)
+        .replace(/"/g, `\'`)
+        .replace(/stroke='#[0-9a-fA-F]{6}|none'/g, `#{$strokecolor}'`)
+        .replace(/(%3Ccircle\b[^>]*?)\sfill='(#([0-9a-fA-F]{6})|none)'/g, `$1 fill='#{$circlefillcolor}'`)
+        .replace(/fill='#[0-9a-fA-F]{6}|none'/g, `fill='#{$fillcolor}`)
 
         const fileName = path.basename(file, '.svg');
         const functionName = toSnakeCase(fileName);
 
         scssOutput += `@function ${functionName}($fillcolor, $circlefillcolor, $strokecolor) {\n`;
-        scssOutput += `  @return "data:image/svg+xml,${encodedSvg}";\n`;
+        scssOutput += `  @return "data:image/svg+xml,${svgContent}";\n`;
         scssOutput += `}\n\n`;
       });
 
@@ -230,7 +224,7 @@ module.exports = async ()=> {
       },
       {
       test: /\.js$/,
-      exclude: /node_modules/, // ✅ 여기!
+      exclude: /node_modules/, 
       use: {
         loader: 'babel-loader',
         options: {
@@ -278,16 +272,20 @@ module.exports = async ()=> {
       patterns: [
         {
           from: path.resolve(__dirname, 'src/fonts'),
-          to: path.resolve(__dirname, 'dist/fonts'),
+          to: path.resolve(__dirname, 'dist/asset/video'),
         },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
         {
-          from: path.resolve(__dirname, 'src/img'),
-          to: path.resolve(__dirname, 'dist/img'),
-        },
+          from: path.resolve(__dirname, 'src/img/common'),
+          to: path.resolve(__dirname, 'dist/asset/img/common'),
+        }, 
+        {
+          from: path.resolve(__dirname, 'src/img/svg'),
+          to: path.resolve(__dirname, 'dist/asset/img/svg'),
+        }, 
+        {
+          from: path.resolve(__dirname, 'src/video'),
+          to: path.resolve(__dirname, 'dist/asset/video'),
+        },               
       ],
     }),
     new GenerateSvgScssPlugin(),
